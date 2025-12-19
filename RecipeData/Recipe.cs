@@ -8,8 +8,8 @@ namespace RecipeData
     {
         public int ID { get; set; }
         public string RecipeName { get; set; }
-        public List<Ingredient> IngredientList { get; set; }
-        public List<Step> StepList { get; set; }
+        public List<Ingredient> IngredientsList { get; set; }
+        public List<Step> StepsList { get; set; }
         public List<Tag> TagsList { get; set; }
     }
 }
