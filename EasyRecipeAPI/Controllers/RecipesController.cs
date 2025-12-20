@@ -24,5 +24,35 @@ namespace EasyRecipeAPI.Controllers
 
             return Ok(recipes);
         }
+
+        [HttpPost]
+        public async Task<ActionResult<Recipe>> AddRecipe(CreateRecipeDto newRecipeDto)
+        {
+            Recipe newRecipe = new Recipe()
+            {
+                RecipeName = newRecipeDto.Name
+            };
+
+            newRecipe.IngredientsList = [];
+            newRecipe.StepsList = [];
+
+            foreach (CreateIngredientDto ingredientDto in newRecipeDto.IngredientsList)
+            {
+                //Ingredient ingredient = new Ingredient() { Name = ingredientDto.Name, UnitAmount = ingredientDto.UnitAmount };
+                newRecipe.IngredientsList.Add(new Ingredient() { Name = ingredientDto.Name, UnitAmount = ingredientDto.UnitAmount });
+            }
+
+            foreach (CreateStepDto stepDto in newRecipeDto.StepsList)
+            {
+                //Step step = new Step() { StepContent = stepDto.StepContent, StepOrder = stepDto.StepOrder };
+                newRecipe.StepsList.Add(new Step() { StepContent = stepDto.StepContent, StepOrder = stepDto.StepOrder });
+            }
+
+            _context.Recipes.Add(newRecipe);
+
+            await _context.SaveChangesAsync();
+
+            return Ok(newRecipe);
+        }
     }
 }

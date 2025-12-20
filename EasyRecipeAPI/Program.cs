@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using EasyRecipeAPI.DbContextData;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +10,12 @@ builder.Services.AddDbContext<EasyRecipeDbContext>(options => options.UseNpgsql(
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    //Add reference handler for avoid reference cycles in recipe
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+});
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 //builder.Services.AddOpenApi();
 
