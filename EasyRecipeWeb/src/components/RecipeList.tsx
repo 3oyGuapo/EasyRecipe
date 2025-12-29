@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import type { Recipe } from "../types";
+import styles from "./RecipeList.module.css";
 
 function RecipeList() {
   const [recipeList, setRecipeList] = useState<Recipe[]>([]);
@@ -25,7 +26,7 @@ function RecipeList() {
 
       <div>
         {recipeList.map((recipe) => (
-          <div key={recipe.id}>
+          <div key={recipe.id} className={styles.card}>
             <h3>{recipe.recipeName}</h3>
           </div>
         ))}
