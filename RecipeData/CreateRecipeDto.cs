@@ -9,5 +9,6 @@ namespace RecipeData
         public string Name { get; set; } = string.Empty;
         public List<CreateIngredientDto> IngredientsList { get; set; } = [];
         public List<CreateStepDto> StepsList { get; set; } = [];
+        public List<string> TagsList { get; set; } = [];
     }
 }
