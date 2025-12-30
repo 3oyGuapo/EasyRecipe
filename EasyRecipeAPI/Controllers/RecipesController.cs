@@ -90,5 +90,32 @@ namespace EasyRecipeAPI.Controllers
 
             return Ok(newRecipe);
         }
+
+        /// <summary>
+        /// Delete method that deletes a recipe from the database
+        /// </summary>
+        /// <param name="id">Id use to find the target recipe that wants to delete</param>
+        /// <returns></returns>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteRecipe(int id)
+        {
+            //Find the recipe from the database using the id
+            var recipeToDelete = await _context.Recipes.FindAsync(id);
+
+            //Check find recipe or not
+            if (recipeToDelete == null)
+            {
+                //Not find target recipe with id and return status code not found
+                return NotFound();
+            }
+
+            //Find valid recipe and perform remove from the database
+            _context.Recipes.Remove(recipeToDelete);
+
+            //Save before return
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
     }
 }
