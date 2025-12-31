@@ -2,7 +2,7 @@ export interface Recipe {
   id: number;
   recipeName: string;
   ingredientsList: Ingredient[];
-  stepsLists: Step[];
+  stepsList: Step[];
   tagsList: Tag[];
 }
 

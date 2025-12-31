@@ -3,15 +3,16 @@ import styles from "./RecipeList.module.css";
 
 interface RecipeCardProps {
   recipe: Recipe;
+  onDelete: () => void; //A method that has no parameter or return value
 }
 
-function RecipeCard({ recipe }: RecipeCardProps) {
+function RecipeCard({ recipe, onDelete }: RecipeCardProps) {
   return (
     <div className={styles.card}>
       <h3>{recipe.recipeName}</h3>
       <p>
-        Ingredients amount: {recipe.ingredientsList?.length || 0}
-        Steps: {recipe.stepsLists?.length || 0}
+        Ingredients amount: {recipe.ingredientsList?.length || 0} {"  "}
+        Steps: {recipe.stepsList?.length || 0}
       </p>
 
       <div>
@@ -21,6 +22,9 @@ function RecipeCard({ recipe }: RecipeCardProps) {
           </span>
         ))}
       </div>
+
+      {/* Create a button that calls onDelete method for delete recipe */}
+      <button onClick={onDelete}>Delete this recipe</button>
     </div>
   );
 }
