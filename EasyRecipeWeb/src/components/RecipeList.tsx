@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import type { Recipe } from "../types";
 import RecipeCard from "./RecipeCard";
+import RecipeForm from "./RecipeForm";
 
 function RecipeList() {
   const [recipeList, setRecipeList] = useState<Recipe[]>([]);
@@ -43,6 +44,11 @@ function RecipeList() {
     <>
       <h2>Recipe List</h2>
 
+      <div>
+        <RecipeForm
+          onCreated={(newRecipe) => setRecipeList([...recipeList, newRecipe])}
+        />
+      </div>
       <div>
         {recipeList.map((recipe) => (
           <RecipeCard
