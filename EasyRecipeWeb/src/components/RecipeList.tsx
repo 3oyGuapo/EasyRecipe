@@ -49,6 +49,7 @@ function RecipeList() {
           onCreated={(newRecipe) => setRecipeList([...recipeList, newRecipe])}
         />
       </div>
+
       <div>
         {recipeList.map((recipe) => (
           <RecipeCard

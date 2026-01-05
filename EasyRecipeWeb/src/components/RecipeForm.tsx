@@ -7,6 +7,9 @@ interface RecipeFormProps {
 
 function RecipeForm({ onCreated }: RecipeFormProps) {
   const [recipeName, setRecipeName] = useState("");
+  const [ingredients, setIngredients] = useState<
+    { ingredientName: string; unitAmount: string }[]
+  >([]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRecipeName(e.target.value);
@@ -38,6 +41,26 @@ function RecipeForm({ onCreated }: RecipeFormProps) {
     }
   };
 
+  const addIngredient = () => {
+    setIngredients([...ingredients, { ingredientName: "", unitAmount: "" }]);
+  };
+
+  const handleIngredientChange = (
+    index: number,
+    field: "name" | "amount",
+    value: string
+  ) => {
+    const newIngredients = [...ingredients];
+
+    if (field === "name") {
+      newIngredients[index].ingredientName = value;
+    } else {
+      newIngredients[index].unitAmount = value;
+    }
+
+    setIngredients(newIngredients);
+  };
+
   return (
     <div>
       <input
@@ -47,6 +70,35 @@ function RecipeForm({ onCreated }: RecipeFormProps) {
         onChange={onChange}
       />
       <button onClick={handleCreate}>Create recipe</button>
+
+      <div className="ingredients-List">
+        <h3>Ingredients</h3>
+
+        {ingredients.map((ingredient, index) => (
+          <div
+            key={index}
+            style={{ display: "flex", gap: "10px", marginBottom: "10px" }}
+          >
+            <input
+              placeholder="Ingredient Name"
+              value={ingredient.ingredientName}
+              onChange={(e) =>
+                handleIngredientChange(index, "name", e.target.value)
+              }
+            />
+
+            <input
+              placeholder="Amount"
+              value={ingredient.unitAmount}
+              onChange={(e) =>
+                handleIngredientChange(index, "amount", e.target.value)
+              }
+            />
+          </div>
+        ))}
+      </div>
+
+      <button onClick={addIngredient}>Add ingredient</button>
     </div>
   );
 }
