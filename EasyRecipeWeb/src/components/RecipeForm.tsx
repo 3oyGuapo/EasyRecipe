@@ -10,16 +10,26 @@ function RecipeForm({ onCreated }: RecipeFormProps) {
   const [ingredients, setIngredients] = useState<
     { ingredientName: string; unitAmount: string }[]
   >([]);
+  const [steps, setSteps] = useState<
+    { stepContent: string; stepOrder: number }[]
+  >([]);
+  const [tagInput, setTagInput] = useState("");
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRecipeName(e.target.value);
   };
 
   const handleCreate = async () => {
+    const tagsArray = tagInput
+      .split(",")
+      .map((tag) => tag.trim())
+      .filter((tag) => tag.length > 0);
+
     const payload = {
       name: recipeName,
-      ingredientsList: [],
-      stepsList: [],
+      ingredientsList: ingredients,
+      stepsList: steps,
+      tagsList: tagsArray,
     };
 
     try {
@@ -45,6 +55,10 @@ function RecipeForm({ onCreated }: RecipeFormProps) {
     setIngredients([...ingredients, { ingredientName: "", unitAmount: "" }]);
   };
 
+  const addStep = () => {
+    setSteps([...steps, { stepContent: "", stepOrder: steps.length + 1 }]);
+  };
+
   const handleIngredientChange = (
     index: number,
     field: "name" | "amount",
@@ -59,6 +73,13 @@ function RecipeForm({ onCreated }: RecipeFormProps) {
     }
 
     setIngredients(newIngredients);
+  };
+
+  const handleStepChange = (index: number, value: string) => {
+    const newSteps = [...steps];
+
+    newSteps[index].stepContent = value;
+    setSteps(newSteps);
   };
 
   return (
@@ -99,6 +120,39 @@ function RecipeForm({ onCreated }: RecipeFormProps) {
       </div>
 
       <button onClick={addIngredient}>Add ingredient</button>
+
+      <div className="steps-List">
+        <h3>Steps</h3>
+
+        {steps.map((step, index) => (
+          <div
+            key={index}
+            style={{ display: "flex", gap: "10px", marginBottom: "10px" }}
+          >
+            <span style={{ padding: "5px", fontWeight: "bold" }}>
+              Step {step.stepOrder}
+            </span>
+            <input
+              placeholder="Step details:"
+              value={step.stepContent}
+              onChange={(e) => handleStepChange(index, e.target.value)}
+              style={{ flex: 1 }}
+            />
+          </div>
+        ))}
+      </div>
+
+      <div style={{ marginTop: "20px" }}>
+        <h3>Tags (use comma to separate)</h3>
+
+        <input
+          placeholder="e.g. breakfast, lunch, dissert"
+          value={tagInput}
+          onChange={(e) => setTagInput(e.target.value)}
+          style={{ width: "100%" }}
+        />
+      </div>
+      <button onClick={addStep}>Add steps</button>
     </div>
   );
 }
