@@ -1,5 +1,6 @@
 import type { Recipe } from "../types";
 import styles from "./RecipeList.module.css";
+import { Link } from "react-router-dom";
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -9,7 +10,9 @@ interface RecipeCardProps {
 function RecipeCard({ recipe, onDelete }: RecipeCardProps) {
   return (
     <div className={styles.card}>
-      <h3>{recipe.recipeName}</h3>
+      <Link to={`/recipe/{recipe.id}`}>
+        <h3>{recipe.recipeName}</h3>
+      </Link>
       <p>
         Ingredients amount: {recipe.ingredientsList?.length || 0} {"  "}
         Steps: {recipe.stepsList?.length || 0}

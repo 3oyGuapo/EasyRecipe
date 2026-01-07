@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import type { Recipe } from "../types";
 import RecipeCard from "./RecipeCard";
-import RecipeForm from "./RecipeForm";
+import { Link } from "react-router-dom";
 
 function RecipeList() {
   const [recipeList, setRecipeList] = useState<Recipe[]>([]);
@@ -43,13 +43,9 @@ function RecipeList() {
   return (
     <>
       <h2>Recipe List</h2>
-
-      <div>
-        <RecipeForm
-          onCreated={(newRecipe) => setRecipeList([...recipeList, newRecipe])}
-        />
-      </div>
-
+      <Link to="/add">
+        <button>Add recipe</button>
+      </Link>
       <div>
         {recipeList.map((recipe) => (
           <RecipeCard

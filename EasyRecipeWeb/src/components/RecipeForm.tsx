@@ -1,11 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import type { Recipe } from "../types.ts";
+import { useNavigate, Link } from "react-router-dom";
 
-interface RecipeFormProps {
-  onCreated: (recipe: Recipe) => void;
-}
-
-function RecipeForm({ onCreated }: RecipeFormProps) {
+function RecipeForm() {
   const [recipeName, setRecipeName] = useState("");
   const [ingredients, setIngredients] = useState<
     { ingredientName: string; unitAmount: string }[]
@@ -14,6 +11,7 @@ function RecipeForm({ onCreated }: RecipeFormProps) {
     { stepContent: string; stepOrder: number }[]
   >([]);
   const [tagInput, setTagInput] = useState("");
+  const navigate = useNavigate();
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRecipeName(e.target.value);
@@ -43,9 +41,9 @@ function RecipeForm({ onCreated }: RecipeFormProps) {
 
       const createdRecipe = await response.json();
 
-      onCreated(createdRecipe);
-
       setRecipeName("");
+
+      navigate("/");
     } catch (error) {
       console.error("Fail to create new recipe", error);
     }
@@ -83,77 +81,86 @@ function RecipeForm({ onCreated }: RecipeFormProps) {
   };
 
   return (
-    <div>
-      <input
-        type="text"
-        placeholder="Enter new recipe name:"
-        value={recipeName}
-        onChange={onChange}
-      />
-      <button onClick={handleCreate}>Create recipe</button>
-
-      <div className="ingredients-List">
-        <h3>Ingredients</h3>
-
-        {ingredients.map((ingredient, index) => (
-          <div
-            key={index}
-            style={{ display: "flex", gap: "10px", marginBottom: "10px" }}
-          >
-            <input
-              placeholder="Ingredient Name"
-              value={ingredient.ingredientName}
-              onChange={(e) =>
-                handleIngredientChange(index, "name", e.target.value)
-              }
-            />
-
-            <input
-              placeholder="Amount"
-              value={ingredient.unitAmount}
-              onChange={(e) =>
-                handleIngredientChange(index, "amount", e.target.value)
-              }
-            />
-          </div>
-        ))}
+    <>
+      <div>
+        <Link to="/">
+          <button>Home page</button>
+        </Link>
       </div>
 
-      <button onClick={addIngredient}>Add ingredient</button>
-
-      <div className="steps-List">
-        <h3>Steps</h3>
-
-        {steps.map((step, index) => (
-          <div
-            key={index}
-            style={{ display: "flex", gap: "10px", marginBottom: "10px" }}
-          >
-            <span style={{ padding: "5px", fontWeight: "bold" }}>
-              Step {step.stepOrder}
-            </span>
-            <input
-              placeholder="Step details:"
-              value={step.stepContent}
-              onChange={(e) => handleStepChange(index, e.target.value)}
-              style={{ flex: 1 }}
-            />
-          </div>
-        ))}
-      </div>
-
-      <div style={{ marginTop: "20px" }}>
-        <h3>Tags (use comma to separate)</h3>
-
+      <div>
         <input
-          placeholder="e.g. breakfast, lunch, dissert"
-          value={tagInput}
-          onChange={(e) => setTagInput(e.target.value)}
-          style={{ width: "100%" }}
+          type="text"
+          placeholder="Enter new recipe name:"
+          value={recipeName}
+          onChange={onChange}
         />
+        <button onClick={handleCreate}>Create recipe</button>
+
+        <div className="ingredients-List">
+          <h3>Ingredients</h3>
+
+          {ingredients.map((ingredient, index) => (
+            <div
+              key={index}
+              style={{ display: "flex", gap: "10px", marginBottom: "10px" }}
+            >
+              <input
+                placeholder="Ingredient Name"
+                value={ingredient.ingredientName}
+                onChange={(e) =>
+                  handleIngredientChange(index, "name", e.target.value)
+                }
+              />
+
+              <input
+                placeholder="Amount"
+                value={ingredient.unitAmount}
+                onChange={(e) =>
+                  handleIngredientChange(index, "amount", e.target.value)
+                }
+              />
+            </div>
+          ))}
+        </div>
+
+        <button onClick={addIngredient}>Add ingredient</button>
+
+        <div className="steps-List">
+          <h3>Steps</h3>
+
+          {steps.map((step, index) => (
+            <div
+              key={index}
+              style={{ display: "flex", gap: "10px", marginBottom: "10px" }}
+            >
+              <span style={{ padding: "5px", fontWeight: "bold" }}>
+                Step {step.stepOrder}
+              </span>
+              <input
+                placeholder="Step details:"
+                value={step.stepContent}
+                onChange={(e) => handleStepChange(index, e.target.value)}
+                style={{ flex: 1 }}
+              />
+            </div>
+          ))}
+        </div>
+
+        <button onClick={addStep}>Add steps</button>
+
+        <div style={{ marginTop: "20px" }}>
+          <h3>Tags (use comma to separate)</h3>
+
+          <input
+            placeholder="e.g. breakfast, lunch, dissert"
+            value={tagInput}
+            onChange={(e) => setTagInput(e.target.value)}
+            style={{ width: "100%" }}
+          />
+        </div>
       </div>
-      <button onClick={addStep}>Add steps</button>
-    </div>
+    </>
   );
 }
 
