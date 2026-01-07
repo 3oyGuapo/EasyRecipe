@@ -29,6 +29,18 @@ namespace EasyRecipeAPI.Controllers
             return Ok(recipes);
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Recipe>> GetRecipe(int id)
+        {
+            var recipe = await _context.Recipes
+                .Include(recipe => recipe.IngredientsList)
+                .Include(recipe => recipe.StepsList)
+                .Include(recipe => recipe.TagsList)
+                .FirstOrDefaultAsync(recipe => recipe.ID == id);
+
+            return Ok(recipe);
+        }
+
         [HttpPost]
         public async Task<ActionResult<Recipe>> AddRecipe(CreateRecipeDto newRecipeDto)
         {
