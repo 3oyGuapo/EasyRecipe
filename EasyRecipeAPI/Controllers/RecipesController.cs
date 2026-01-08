@@ -56,14 +56,12 @@ namespace EasyRecipeAPI.Controllers
             //Add ingredients
             foreach (CreateIngredientDto ingredientDto in newRecipeDto.IngredientsList)
             {
-                //Ingredient ingredient = new Ingredient() { Name = ingredientDto.Name, UnitAmount = ingredientDto.UnitAmount };
                 newRecipe.IngredientsList.Add(new Ingredient() { Name = ingredientDto.Name, UnitAmount = ingredientDto.UnitAmount });
             }
 
             //Add steps
             foreach (CreateStepDto stepDto in newRecipeDto.StepsList)
             {
-                //Step step = new Step() { StepContent = stepDto.StepContent, StepOrder = stepDto.StepOrder };
                 newRecipe.StepsList.Add(new Step() { StepContent = stepDto.StepContent, StepOrder = stepDto.StepOrder });
             }
 
@@ -128,6 +126,52 @@ namespace EasyRecipeAPI.Controllers
             await _context.SaveChangesAsync();
 
             return Ok();
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateRecipe(int id, CreateRecipeDto newRecipeDto)
+        {
+            var recipeToUpdate = await _context.Recipes.Include(recipe => recipe.IngredientsList).Include(recipe => recipe.StepsList).Include(recipe => recipe.TagsList).FirstOrDefaultAsync(recipe => recipe.ID == id);
+
+            if (recipeToUpdate == null)
+            {
+                return NotFound();
+            }
+
+            recipeToUpdate.RecipeName = newRecipeDto.Name;
+
+            recipeToUpdate.IngredientsList.Clear();
+            recipeToUpdate.StepsList.Clear();
+            recipeToUpdate.TagsList.Clear();
+
+            foreach (CreateIngredientDto ingredient in newRecipeDto.IngredientsList)
+            {
+                recipeToUpdate.IngredientsList.Add(new Ingredient() { Name = ingredient.Name, UnitAmount = ingredient.UnitAmount});
+            }
+
+            foreach (CreateStepDto step in newRecipeDto.StepsList)
+            {
+                recipeToUpdate.StepsList.Add(new Step() { StepContent = step.StepContent, StepOrder = step.StepOrder });
+            }
+
+            foreach (string tag in newRecipeDto.TagsList)
+            {
+                Tag existingTag = await _context.Tags.FirstOrDefaultAsync(t => t.Name == tag);
+
+                if (existingTag != null)
+                {
+                    recipeToUpdate.TagsList.Add(existingTag);
+                }
+
+                else
+                {
+                    recipeToUpdate.TagsList.Add(new Tag() { Name = tag });
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }
