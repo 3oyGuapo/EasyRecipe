@@ -10,7 +10,7 @@ interface RecipeCardProps {
 function RecipeCard({ recipe, onDelete }: RecipeCardProps) {
   return (
     <div className={styles.card}>
-      <Link to={`/recipe/{recipe.id}`}>
+      <Link to={`/recipe/${recipe.id}`}>
         <h3>{recipe.recipeName}</h3>
       </Link>
       <p>
