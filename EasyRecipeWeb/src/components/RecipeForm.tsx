@@ -5,7 +5,7 @@ import { useNavigate, Link } from "react-router-dom";
 function RecipeForm() {
   const [recipeName, setRecipeName] = useState("");
   const [ingredients, setIngredients] = useState<
-    { ingredientName: string; unitAmount: string }[]
+    { name: string; unitAmount: string }[]
   >([]);
   const [steps, setSteps] = useState<
     { stepContent: string; stepOrder: number }[]
@@ -50,7 +50,7 @@ function RecipeForm() {
   };
 
   const addIngredient = () => {
-    setIngredients([...ingredients, { ingredientName: "", unitAmount: "" }]);
+    setIngredients([...ingredients, { name: "", unitAmount: "" }]);
   };
 
   const addStep = () => {
@@ -65,7 +65,7 @@ function RecipeForm() {
     const newIngredients = [...ingredients];
 
     if (field === "name") {
-      newIngredients[index].ingredientName = value;
+      newIngredients[index].name = value;
     } else {
       newIngredients[index].unitAmount = value;
     }
@@ -107,7 +107,7 @@ function RecipeForm() {
             >
               <input
                 placeholder="Ingredient Name"
-                value={ingredient.ingredientName}
+                value={ingredient.name}
                 onChange={(e) =>
                   handleIngredientChange(index, "name", e.target.value)
                 }
