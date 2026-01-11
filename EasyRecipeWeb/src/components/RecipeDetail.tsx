@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import type { Recipe } from "../types";
 
 function RecipeDetail() {
@@ -30,6 +30,7 @@ function RecipeDetail() {
     <>
       <div>
         <h2>Recipe Id: {id}</h2>
+
         <ul>
           {recipe.ingredientsList.map((ingredient) => (
             <li>{ingredient.name}</li>
@@ -43,6 +44,11 @@ function RecipeDetail() {
             </li>
           ))}
         </ul>
+      </div>
+      <div>
+        <Link to={`/recipe/edit/${id}`}>
+          <button>Edit</button>
+        </Link>
       </div>
     </>
   );
