@@ -85,19 +85,6 @@ namespace EasyRecipeAPI.Controllers
 
             await _context.SaveChangesAsync();
 
-            //For debugging
-            /*
-            Console.WriteLine($"[Debug] Recipe Name: {newRecipe.RecipeName}");
-            Console.WriteLine($"[Debug] Tags Count in Memory: {newRecipe.TagsList?.Count ?? -1}");
-
-            if (newRecipe.TagsList != null)
-            {
-                foreach (var t in newRecipe.TagsList)
-                {
-                    Console.WriteLine($"[Debug] Tag: {t.Name}, ID: {t.ID}");
-                }
-            }*/
-
             return Ok(newRecipe);
         }
 
