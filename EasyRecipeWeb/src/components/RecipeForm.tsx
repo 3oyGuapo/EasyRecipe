@@ -90,6 +90,7 @@ function RecipeForm() {
 
       <div>
         <input
+          required
           type="text"
           placeholder="Enter new recipe name:"
           value={recipeName}
@@ -106,6 +107,7 @@ function RecipeForm() {
               style={{ display: "flex", gap: "10px", marginBottom: "10px" }}
             >
               <input
+                required
                 placeholder="Ingredient Name"
                 value={ingredient.name}
                 onChange={(e) =>
@@ -114,6 +116,7 @@ function RecipeForm() {
               />
 
               <input
+                required
                 placeholder="Amount"
                 value={ingredient.unitAmount}
                 onChange={(e) =>
@@ -138,6 +141,7 @@ function RecipeForm() {
                 Step {step.stepOrder}
               </span>
               <input
+                required
                 placeholder="Step details:"
                 value={step.stepContent}
                 onChange={(e) => handleStepChange(index, e.target.value)}
