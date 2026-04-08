@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="EasyRecipeAPI.Tests/EasyRecipeAPI.Tests.csproj" Id="7c7dbb68-1038-45af-b506-eb2cc543d0f4" />
   <Project Path="EasyRecipeAPI/EasyRecipeAPI.csproj" />
   <Project Path="RecipeData/RecipeData.csproj" />
 </Solution>
