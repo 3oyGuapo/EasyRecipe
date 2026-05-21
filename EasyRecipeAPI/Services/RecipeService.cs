@@ -7,21 +7,21 @@ namespace EasyRecipeAPI.Services
 {
     public class RecipeService :IRecipeService
     {
-        private readonly IRecipeRepository _repository;
+        private readonly IRecipeRepository _recipeRepository;
 
         public RecipeService(IRecipeRepository repository)
         {
-            _repository = repository;
+            _recipeRepository = repository;
         }
 
         public async Task<IEnumerable<Recipe>> GetAllRecipesAsync()
         {
-            return await _repository.GetAllRecipesAsync();
+            return await _recipeRepository.GetAllRecipesAsync();
         }
 
         public async Task<Recipe?> GetRecipeByIdAsync(int id)
         {
-            return await _repository.GetRecipeByIdAsync(id);
+            return await _recipeRepository.GetRecipeByIdAsync(id);
         }
 
         public async Task<Recipe> CreateRecipeAsync(CreateRecipeDto newRecipeDto)
@@ -54,7 +54,7 @@ namespace EasyRecipeAPI.Services
 
             foreach (string tagName in newRecipeDto.TagsList)
             {
-                Tag? existingTag = await _repository.GetTagByNameAsync(tagName);
+                Tag? existingTag = await _recipeRepository.GetTagByNameAsync(tagName);
 
                 if (existingTag != null)
                 {
@@ -66,15 +66,15 @@ namespace EasyRecipeAPI.Services
                 }
             }
 
-            await _repository.AddRecipeAsync(newRecipe);
-            await _repository.SaveChangesAsync();
+            await _recipeRepository.AddRecipeAsync(newRecipe);
+            await _recipeRepository.SaveChangesAsync();
 
             return newRecipe;
         }
 
         public async Task UpdateRecipeByIdAsync(int id, CreateRecipeDto updateRecipeDto)
         {
-            var recipeToUpdate = await _repository.GetRecipeByIdAsync(id);
+            var recipeToUpdate = await _recipeRepository.GetRecipeByIdAsync(id);
 
             if (recipeToUpdate == null)
             {
@@ -107,7 +107,7 @@ namespace EasyRecipeAPI.Services
 
             foreach (string tagDto in updateRecipeDto.TagsList)
             {
-                Tag? existingTag = await _repository.GetTagByNameAsync(tagDto);
+                Tag? existingTag = await _recipeRepository.GetTagByNameAsync(tagDto);
 
                 if (existingTag != null)
                 {
@@ -119,20 +119,20 @@ namespace EasyRecipeAPI.Services
                 }
             }
 
-            await _repository.SaveChangesAsync();
+            await _recipeRepository.SaveChangesAsync();
         }
 
         public async Task DeleteRecipeByIdAsync(int id)
         {
-            var recipeToDelete = await _repository.GetRecipeByIdAsync(id);
+            var recipeToDelete = await _recipeRepository.GetRecipeByIdAsync(id);
 
             if (recipeToDelete == null)
             {
                 throw new KeyNotFoundException($"Key with ID {id} not found.");
             }
 
-            await _repository.DeleteRecipeAsync(recipeToDelete);
-            await _repository.SaveChangesAsync();
+            await _recipeRepository.DeleteRecipeAsync(recipeToDelete);
+            await _recipeRepository.SaveChangesAsync();
         }
     }
 }

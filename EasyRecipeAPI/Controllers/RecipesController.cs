@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using EasyRecipeAPI.DbContextData;
 using RecipeData;
 using Microsoft.EntityFrameworkCore;
+using EasyRecipeAPI.Services;
 
 namespace EasyRecipeAPI.Controllers
 {
@@ -10,21 +11,17 @@ namespace EasyRecipeAPI.Controllers
     [ApiController]
     public class RecipesController : ControllerBase
     {
-        private readonly EasyRecipeDbContext _context;
+        private readonly IRecipeService _recipeService;
 
-        public RecipesController(EasyRecipeDbContext context)
+        public RecipesController(IRecipeService service)
         {
-            _context = context;
+            _recipeService = service;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipes()
         {
-            var recipes = await _context.Recipes
-                .Include(recipe => recipe.IngredientsList)
-                .Include(recipe => recipe.StepsList)
-                .Include(recipe => recipe.TagsList)
-                .ToListAsync();
+            var recipes = await _recipeService.GetAllRecipesAsync();
 
             return Ok(recipes);
         }
@@ -32,11 +29,12 @@ namespace EasyRecipeAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Recipe>> GetRecipe(int id)
         {
-            var recipe = await _context.Recipes
-                .Include(recipe => recipe.IngredientsList)
-                .Include(recipe => recipe.StepsList)
-                .Include(recipe => recipe.TagsList)
-                .FirstOrDefaultAsync(recipe => recipe.ID == id);
+            var recipe = await _recipeService.GetRecipeByIdAsync(id);
+
+            if (recipe == null)
+            {
+                return NotFound();
+            }
 
             return Ok(recipe);
         }
@@ -44,48 +42,9 @@ namespace EasyRecipeAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Recipe>> AddRecipe(CreateRecipeDto newRecipeDto)
         {
-            Recipe newRecipe = new Recipe()
-            {
-                RecipeName = newRecipeDto.Name
-            };
+            var createdRecipe = await _recipeService.CreateRecipeAsync(newRecipeDto);
 
-            newRecipe.IngredientsList = [];
-            newRecipe.StepsList = [];
-            newRecipe.TagsList = [];
-
-            //Add ingredients
-            foreach (CreateIngredientDto ingredientDto in newRecipeDto.IngredientsList)
-            {
-                newRecipe.IngredientsList.Add(new Ingredient() { Name = ingredientDto.Name, UnitAmount = ingredientDto.UnitAmount });
-            }
-
-            //Add steps
-            foreach (CreateStepDto stepDto in newRecipeDto.StepsList)
-            {
-                newRecipe.StepsList.Add(new Step() { StepContent = stepDto.StepContent, StepOrder = stepDto.StepOrder });
-            }
-
-            foreach (string tagName in newRecipeDto.TagsList)
-            {
-                Tag existingTag = await _context.Tags.FirstOrDefaultAsync(t => t.Name == tagName);
-                
-                if (existingTag != null)
-                {
-                    newRecipe.TagsList.Add(existingTag);
-                }
-
-                else
-                {
-                    Tag newTag = new Tag { Name = tagName };
-                    newRecipe.TagsList.Add(newTag);
-                }
-            }
-
-            _context.Recipes.Add(newRecipe);
-
-            await _context.SaveChangesAsync();
-
-            return Ok(newRecipe);
+            return CreatedAtAction(nameof(GetRecipe), new { id = createdRecipe.ID }, createdRecipe);
         }
 
         /// <summary>
@@ -96,69 +55,29 @@ namespace EasyRecipeAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRecipe(int id)
         {
-            //Find the recipe from the database using the id
-            var recipeToDelete = await _context.Recipes.FindAsync(id);
-
-            //Check find recipe or not
-            if (recipeToDelete == null)
+            try
             {
-                //Not find target recipe with id and return status code not found
-                return NotFound();
+                await _recipeService.DeleteRecipeByIdAsync(id);
+                return Ok();
             }
-
-            //Find valid recipe and perform remove from the database
-            _context.Recipes.Remove(recipeToDelete);
-
-            //Save before return
-            await _context.SaveChangesAsync();
-
-            return Ok();
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateRecipe(int id, CreateRecipeDto newRecipeDto)
         {
-            var recipeToUpdate = await _context.Recipes.Include(recipe => recipe.IngredientsList).Include(recipe => recipe.StepsList).Include(recipe => recipe.TagsList).FirstOrDefaultAsync(recipe => recipe.ID == id);
-
-            if (recipeToUpdate == null)
+            try
             {
-                return NotFound();
+                await _recipeService.UpdateRecipeByIdAsync(id, newRecipeDto);
+                return NoContent();
             }
-
-            recipeToUpdate.RecipeName = newRecipeDto.Name;
-
-            recipeToUpdate.IngredientsList.Clear();
-            recipeToUpdate.StepsList.Clear();
-            recipeToUpdate.TagsList.Clear();
-
-            foreach (CreateIngredientDto ingredient in newRecipeDto.IngredientsList)
+            catch (KeyNotFoundException ex)
             {
-                recipeToUpdate.IngredientsList.Add(new Ingredient() { Name = ingredient.Name, UnitAmount = ingredient.UnitAmount});
+                return NotFound(ex.Message);
             }
-
-            foreach (CreateStepDto step in newRecipeDto.StepsList)
-            {
-                recipeToUpdate.StepsList.Add(new Step() { StepContent = step.StepContent, StepOrder = step.StepOrder });
-            }
-
-            foreach (string tag in newRecipeDto.TagsList)
-            {
-                Tag existingTag = await _context.Tags.FirstOrDefaultAsync(t => t.Name == tag);
-
-                if (existingTag != null)
-                {
-                    recipeToUpdate.TagsList.Add(existingTag);
-                }
-
-                else
-                {
-                    recipeToUpdate.TagsList.Add(new Tag() { Name = tag });
-                }
-            }
-
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
     }
 }

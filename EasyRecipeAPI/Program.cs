@@ -1,12 +1,17 @@
 using Microsoft.EntityFrameworkCore;
 using EasyRecipeAPI.DbContextData;
 using System.Text.Json.Serialization;
+using EasyRecipeAPI.Repositories;
+using EasyRecipeAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<EasyRecipeDbContext>(options => options.UseNpgsql(connectionString));
+
+builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
+builder.Services.AddScoped<IRecipeService, RecipeService>();
 
 //Adding CORS services for React
 builder.Services.AddCors(options =>
