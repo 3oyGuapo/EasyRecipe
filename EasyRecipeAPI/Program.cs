@@ -3,6 +3,7 @@ using EasyRecipeAPI.DbContextData;
 using System.Text.Json.Serialization;
 using EasyRecipeAPI.Repositories;
 using EasyRecipeAPI.Services;
+using EasyRecipeAPI.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +42,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+// Register the exception handling middleware
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

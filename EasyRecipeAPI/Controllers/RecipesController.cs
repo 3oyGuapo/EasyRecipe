@@ -55,29 +55,15 @@ namespace EasyRecipeAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRecipe(int id)
         {
-            try
-            {
-                await _recipeService.DeleteRecipeByIdAsync(id);
-                return Ok();
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
+            await _recipeService.DeleteRecipeByIdAsync(id);
+            return Ok();
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateRecipe(int id, CreateRecipeDto newRecipeDto)
         {
-            try
-            {
-                await _recipeService.UpdateRecipeByIdAsync(id, newRecipeDto);
-                return NoContent();
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
+            await _recipeService.UpdateRecipeByIdAsync(id, newRecipeDto);
+            return NoContent();
         }
     }
 }
