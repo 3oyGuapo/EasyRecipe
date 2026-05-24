@@ -8,50 +8,103 @@ using RecipeData;
 using EasyRecipeAPI;
 using EasyRecipeAPI.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using NSubstitute;
+using EasyRecipeAPI.Services;
 
 namespace EasyRecipeAPI.Tests
 {
     public class RecipesControllerTests
     {
-        private readonly DbContextOptions<EasyRecipeDbContext> _dbOptions;
-
-        public RecipesControllerTests()
+        [Fact]
+        public async Task GetRecipes_RecipeExists_ReturnsOkWithRecipes()
         {
-            _dbOptions = new DbContextOptionsBuilder<EasyRecipeDbContext>()
-                .UseInMemoryDatabase(databaseName: System.Guid.NewGuid().ToString())
-                .Options;
+            // 1. Arrange
+            var mockService = Substitute.For<IRecipeService>();
+
+            int recipeId = 5;
+            var testRecipe = new Recipe
+            {
+                ID = recipeId,
+                RecipeName = "Test Recipe",
+                IngredientsList = new List<Ingredient>(),
+                StepsList = new List<Step>(),
+                TagsList = new List<Tag>()
+            };
+
+            mockService.GetRecipeByIdAsync(recipeId).Returns(testRecipe);
+
+            var controller = new RecipesController(mockService);
+
+
+            // 2. Act
+            var actionResult = await controller.GetRecipe(recipeId);
+
+
+            // 3. Assert
+            Assert.NotNull(actionResult);
+
+            var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
+
+            var returnedRecipe = Assert.IsType<Recipe>(okResult.Value);
+
+            Assert.Equal(recipeId, returnedRecipe.ID);
+            Assert.Equal("Test Recipe", returnedRecipe.RecipeName);
+        }
+
+
+        [Fact]
+        public async Task GetRecipe_RecipeNotFound_ReturnsNotFound()
+        {
+            // 1. Arrange
+            var mockService = Substitute.For<IRecipeService>();
+            var notExistingId = 999;
+
+            mockService.GetRecipeByIdAsync(notExistingId).Returns((Recipe?)null);
+
+            var controller = new RecipesController(mockService);
+
+            // 2. Act
+            var actionResult = await controller.GetRecipe(notExistingId);
+
+            // 3. Assert
+            Assert.IsType<NotFoundResult>(actionResult.Result);
+        }
+
+
+        [Fact]
+        public async Task DeleteRecipe_IdNotFound_ReturnsNotFound()
+        {
+            // 1. Arrange
+            var mockService = Substitute.For<IRecipeService>();
+            int notExistingId = 999;
+
+            mockService.DeleteRecipeByIdAsync(notExistingId).Returns(Task.FromException<KeyNotFoundException>(new KeyNotFoundException($"Recipe with ID {notExistingId} not found.")));
+
+            var controller = new RecipesController(mockService);
+
+            // 2. Act && 3. Assert
+            await Assert.ThrowsAsync<KeyNotFoundException>(async () =>
+            {
+                await controller.DeleteRecipe(notExistingId);
+            });
         }
 
         [Fact]
-        public async Task GetRecipes_ReturnAllRecipes()
+        public async Task DeleteRecipe_IdExists_ReturnsOk()
         {
-            //Arrange
-            using (var context = new EasyRecipeDbContext(_dbOptions))
-            {
-                context.Recipes.Add(new Recipe { RecipeName = "Test Recipe Name 1" });
-                context.Recipes.Add(new Recipe { RecipeName = "Test Recipe Name 2" });
+            // 1. Arrange
+            var mockService = Substitute.For<IRecipeService>();
+            int recipeId = 3;
 
-                //Save changes to the inMemory database
-                await context.SaveChangesAsync();
-            }
+            mockService.DeleteRecipeByIdAsync(recipeId).Returns(Task.CompletedTask);
 
-            //Act
-            using (var context = new EasyRecipeDbContext(_dbOptions))
-            {
-                var controller = new RecipesController(context);
+            var controller = new RecipesController(mockService);
 
-                var result = await controller.GetRecipes();
+            //2, Act
+            IActionResult actionResult = await controller.DeleteRecipe(recipeId);
 
-                //Assert
-                var actionResult = Assert.IsType<ActionResult<IEnumerable<Recipe>>>(result);
-
-                var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
-
-                var recipes = Assert.IsAssignableFrom<IEnumerable<Recipe>>(okResult.Value);
-
-                //Check does it contain exactly 2 recipes
-                Assert.Equal(2, recipes.Count());
-            }
+            // 3. Assert
+            Assert.IsType<OkResult>(actionResult);
         }
     }
 }
