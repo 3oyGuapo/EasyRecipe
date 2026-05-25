@@ -79,5 +79,65 @@ namespace EasyRecipeAPI.Tests.Repositories
             Assert.Equal(2, recipe.TagsList.Count);
             Assert.Contains(recipe.TagsList, t => t.Name == "Main Dish");
         }
+
+        [Fact]
+        public async Task SaveChangesAsync_AuditableEntity_ShouldAutomaticallySetTimes()
+        {
+            // 1. Arrange
+            var dbOptions = new DbContextOptionsBuilder<EasyRecipeDbContext>()
+                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+                .Options;
+
+            var newRecipe = new Recipe
+            {
+                RecipeName = "Mussroom noodle"
+            };
+
+            // 2. Act
+            DateTime beforeCreateTime = DateTime.UtcNow;
+
+            using (var context = new EasyRecipeDbContext(dbOptions))
+            {
+                context.Recipes.Add(newRecipe);
+
+                await context.SaveChangesAsync();
+            }
+
+            // 3. Assert
+            using (var context = new EasyRecipeDbContext(dbOptions))
+            {
+                var savedRecipe = await context.Recipes.FirstAsync();
+
+                Assert.NotEqual(DateTime.MinValue, savedRecipe.CreatedAt);
+
+                Assert.True(savedRecipe.CreatedAt >= beforeCreateTime);
+
+                Assert.Null(savedRecipe.LastModifiedAt);
+            }
+
+            // 4. Act
+            DateTime beforeUpdateTime = DateTime.UtcNow;
+
+            await Task.Delay(10);
+
+            using (var context = new EasyRecipeDbContext(dbOptions))
+            {
+                var recipeToUpdate = await context.Recipes.FirstAsync();
+                recipeToUpdate.RecipeName = "Vegetable noodle";
+
+                await context.SaveChangesAsync();
+            }
+
+            using (var context = new EasyRecipeDbContext(dbOptions))
+            {
+                var updatedRecipe = await context.Recipes.FirstAsync();
+
+                Assert.NotNull(updatedRecipe.LastModifiedAt);
+
+                Assert.True(updatedRecipe.LastModifiedAt >= beforeUpdateTime);
+
+                Assert.True(updatedRecipe.CreatedAt < beforeUpdateTime);
+            }
+        }
     }
 }
