@@ -36,9 +36,10 @@ namespace EasyRecipeAPI.Repositories
             await _context.Recipes.AddAsync(newRecipe);
         }
 
-        public async Task DeleteRecipeAsync(Recipe deleteRecipe)
+        public async Task DeleteRecipeAsync(Recipe recipeToDelete)
         {
-            _context.Recipes.Remove(deleteRecipe);
+            recipeToDelete.IsDeleted = true;
+            recipeToDelete.DeletedAt = DateTime.UtcNow;
             await Task.CompletedTask;
         }
 
