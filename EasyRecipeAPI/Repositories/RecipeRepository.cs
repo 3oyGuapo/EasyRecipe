@@ -52,5 +52,27 @@ namespace EasyRecipeAPI.Repositories
         {
             await _context.SaveChangesAsync();
         }
+
+        public async Task<(IEnumerable<Recipe> Items, int TotalCount)> GetPagedRecipesAsync(RecipeQueryParameters query)
+        {
+            var baseQuery = _context.Recipes.AsQueryable();
+
+            if (!string.IsNullOrEmpty(query.SearchQuery))
+            {
+                baseQuery = baseQuery.Where(recipe => recipe.RecipeName.Contains(query.SearchQuery));
+            }
+            
+            int totalCount = await baseQuery.CountAsync();
+
+            var items = await baseQuery
+                .Include(recipe => recipe.IngredientsList)
+                .Include(recipe => recipe.StepsList)
+                .Include(recipe => recipe.TagsList)
+                .Skip((query.PageNumber - 1) * query.PageSize)
+                .Take(query.PageSize)
+                .ToListAsync();
+
+            return (items, totalCount);
+        }
     }
 }

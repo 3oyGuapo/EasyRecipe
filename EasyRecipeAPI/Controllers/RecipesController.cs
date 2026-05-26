@@ -39,6 +39,13 @@ namespace EasyRecipeAPI.Controllers
             return Ok(recipe);
         }
 
+        [HttpGet]
+        public async Task<ActionResult<PagedResult<Recipe>>> GetRecipes([FromQuery] RecipeQueryParameters query)
+        {
+            var pagedResult = await _recipeService.GetPagedRecipesAsync(query);
+            return Ok(pagedResult);
+        }
+
         [HttpPost]
         public async Task<ActionResult<Recipe>> AddRecipe(CreateRecipeDto newRecipeDto)
         {

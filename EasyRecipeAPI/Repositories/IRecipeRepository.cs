@@ -10,5 +10,6 @@ namespace EasyRecipeAPI.Repositories
         Task DeleteRecipeAsync(Recipe deleteRecipe);
         Task<Tag?> GetTagByNameAsync(string name);
         Task SaveChangesAsync();
+        Task<(IEnumerable<Recipe> Items, int TotalCount)> GetPagedRecipesAsync(RecipeQueryParameters query);
     }
 }

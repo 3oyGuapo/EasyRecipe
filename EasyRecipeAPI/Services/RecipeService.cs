@@ -134,5 +134,19 @@ namespace EasyRecipeAPI.Services
             await _recipeRepository.DeleteRecipeAsync(recipeToDelete);
             await _recipeRepository.SaveChangesAsync();
         }
+
+        public async Task<PagedResult<Recipe>> GetPagedRecipesAsync(RecipeQueryParameters query)
+        {
+            var (items, totalCount) = await _recipeRepository.GetPagedRecipesAsync(query);
+
+            return new PagedResult<Recipe>
+            {
+                Items = items.ToList(),
+                TotalCount = totalCount,
+                PageSize = query.PageSize,
+                CurrentPage = query.PageNumber
+            };
+            
+        }
     }
 }
