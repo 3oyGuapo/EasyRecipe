@@ -1,7 +1,7 @@
 ﻿using EasyRecipeAPI.DbContextData;
 using EasyRecipeAPI.Repositories;
 using Microsoft.EntityFrameworkCore;
-using RecipeData;
+using RecipeData.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;

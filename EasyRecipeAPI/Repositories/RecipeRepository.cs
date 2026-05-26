@@ -1,6 +1,7 @@
 ﻿using EasyRecipeAPI.DbContextData;
 using Microsoft.EntityFrameworkCore;
-using RecipeData;
+using RecipeData.Entities;
+using RecipeData.Parameters;
 
 namespace EasyRecipeAPI.Repositories
 {

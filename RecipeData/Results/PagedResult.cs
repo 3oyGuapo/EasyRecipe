@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RecipeData
+namespace RecipeData.Results
 {
     public class PagedResult<T>
     {

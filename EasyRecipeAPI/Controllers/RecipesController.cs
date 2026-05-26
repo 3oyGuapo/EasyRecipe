@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using EasyRecipeAPI.DbContextData;
-using RecipeData;
 using Microsoft.EntityFrameworkCore;
 using EasyRecipeAPI.Services;
+using RecipeData.Dtos;
+using RecipeData.Results;
+using RecipeData.Parameters;
+using RecipeData.Entities;
 
 namespace EasyRecipeAPI.Controllers
 {

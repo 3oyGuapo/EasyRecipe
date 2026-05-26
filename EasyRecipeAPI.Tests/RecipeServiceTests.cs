@@ -6,6 +6,8 @@ using NSubstitute;
 using RecipeData;
 using EasyRecipeAPI.Services;
 using EasyRecipeAPI.Repositories;
+using RecipeData.Dtos;
+using RecipeData.Entities;
 
 namespace EasyRecipeAPI.Tests
 {

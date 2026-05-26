@@ -1,4 +1,7 @@
-﻿using RecipeData;
+﻿using RecipeData.Dtos;
+using RecipeData.Entities;
+using RecipeData.Parameters;
+using RecipeData.Results;
 
 namespace EasyRecipeAPI.Services
 {

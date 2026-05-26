@@ -1,9 +1,10 @@
-﻿using System;
+﻿using RecipeData.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace RecipeData
+namespace RecipeData.Entities
 {
     public class Recipe : IAuditable, ISoftDeletable
     {
