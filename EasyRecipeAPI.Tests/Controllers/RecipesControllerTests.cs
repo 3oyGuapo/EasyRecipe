@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using EasyRecipeAPI.Services;
 using RecipeData.Entities;
+using RecipeData.Dtos;
 
 namespace EasyRecipeAPI.Tests.Controllers
 {
@@ -21,13 +22,13 @@ namespace EasyRecipeAPI.Tests.Controllers
             var mockService = Substitute.For<IRecipeService>();
 
             int recipeId = 5;
-            var testRecipe = new Recipe
+            var testRecipe = new RecipeResponseDto
             {
-                ID = recipeId,
+                Id = recipeId,
                 RecipeName = "Test Recipe",
-                IngredientsList = new List<Ingredient>(),
-                StepsList = new List<Step>(),
-                TagsList = new List<Tag>()
+                Ingredients = new List<IngredientResponseDto>(),
+                Steps = new List<StepResponseDto>(),
+                Tags = new List<String>()
             };
 
             mockService.GetRecipeByIdAsync(recipeId).Returns(testRecipe);
@@ -44,9 +45,9 @@ namespace EasyRecipeAPI.Tests.Controllers
 
             var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
 
-            var returnedRecipe = Assert.IsType<Recipe>(okResult.Value);
+            var returnedRecipe = Assert.IsType<RecipeResponseDto>(okResult.Value);
 
-            Assert.Equal(recipeId, returnedRecipe.ID);
+            Assert.Equal(recipeId, returnedRecipe.Id);
             Assert.Equal("Test Recipe", returnedRecipe.RecipeName);
         }
 
@@ -58,7 +59,7 @@ namespace EasyRecipeAPI.Tests.Controllers
             var mockService = Substitute.For<IRecipeService>();
             var notExistingId = 999;
 
-            mockService.GetRecipeByIdAsync(notExistingId).Returns((Recipe?)null);
+            mockService.GetRecipeByIdAsync(notExistingId).Returns((RecipeResponseDto?)null);
 
             var controller = new RecipesController(mockService);
 

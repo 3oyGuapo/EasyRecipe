@@ -167,6 +167,7 @@ namespace EasyRecipeAPI.Services
             return new RecipeResponseDto
             {
                 Id = recipe.ID,
+                RecipeName = recipe.RecipeName,
                 Ingredients = recipe.IngredientsList.Select(ingredient => new IngredientResponseDto
                 {
                     Name = ingredient.Name,
