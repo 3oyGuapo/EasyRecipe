@@ -17,17 +17,25 @@ namespace EasyRecipeAPI.Services
             _recipeRepository = repository;
         }
 
-        public async Task<IEnumerable<Recipe>> GetAllRecipesAsync()
+        public async Task<IEnumerable<RecipeResponseDto>> GetAllRecipesAsync()
         {
-            return await _recipeRepository.GetAllRecipesAsync();
+            var recipes = await _recipeRepository.GetAllRecipesAsync();
+
+            return recipes.Select(MapToResponseDto);
         }
 
-        public async Task<Recipe?> GetRecipeByIdAsync(int id)
+        public async Task<RecipeResponseDto?> GetRecipeByIdAsync(int id)
         {
-            return await _recipeRepository.GetRecipeByIdAsync(id);
+            var recipe = await _recipeRepository.GetRecipeByIdAsync(id);
+            if (recipe == null)
+            {
+                return null;
+            }
+
+            return MapToResponseDto(recipe);
         }
 
-        public async Task<Recipe> CreateRecipeAsync(CreateRecipeDto newRecipeDto)
+        public async Task<RecipeResponseDto> CreateRecipeAsync(CreateRecipeDto newRecipeDto)
         {
             Recipe newRecipe = new Recipe()
             {
@@ -72,7 +80,7 @@ namespace EasyRecipeAPI.Services
             await _recipeRepository.AddRecipeAsync(newRecipe);
             await _recipeRepository.SaveChangesAsync();
 
-            return newRecipe;
+            return MapToResponseDto(newRecipe);
         }
 
         public async Task UpdateRecipeByIdAsync(int id, CreateRecipeDto updateRecipeDto)
@@ -138,18 +146,40 @@ namespace EasyRecipeAPI.Services
             await _recipeRepository.SaveChangesAsync();
         }
 
-        public async Task<PagedResult<Recipe>> GetPagedRecipesAsync(RecipeQueryParameters query)
+        public async Task<PagedResult<RecipeResponseDto>> GetPagedRecipesAsync(RecipeQueryParameters query)
         {
             var (items, totalCount) = await _recipeRepository.GetPagedRecipesAsync(query);
 
-            return new PagedResult<Recipe>
+            return new PagedResult<RecipeResponseDto>
             {
-                Items = items.ToList(),
+                Items = items.Select(MapToResponseDto).ToList(),
                 TotalCount = totalCount,
                 PageSize = query.PageSize,
                 CurrentPage = query.PageNumber
             };
             
+        }
+
+
+
+        private RecipeResponseDto MapToResponseDto(Recipe recipe)
+        {
+            return new RecipeResponseDto
+            {
+                Id = recipe.ID,
+                Ingredients = recipe.IngredientsList.Select(ingredient => new IngredientResponseDto
+                {
+                    Name = ingredient.Name,
+                    UnitAmount = ingredient.UnitAmount
+                }).ToList(),
+                Steps = recipe.StepsList.Select(step => new StepResponseDto
+                {
+                    StepContent = step.StepContent,
+                    StepOrder = step.StepOrder
+                }).ToList(),
+                Tags = recipe.TagsList.Select(tag => tag.Name).ToList(),
+                CreatedAt = recipe.CreatedAt
+            };
         }
     }
 }

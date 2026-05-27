@@ -7,11 +7,11 @@ namespace EasyRecipeAPI.Services
 {
     public interface IRecipeService
     {
-        Task<IEnumerable<Recipe>> GetAllRecipesAsync();
-        Task<Recipe?> GetRecipeByIdAsync(int id);
-        Task<Recipe> CreateRecipeAsync(CreateRecipeDto newRecipeDto);
+        Task<IEnumerable<RecipeResponseDto>> GetAllRecipesAsync();
+        Task<RecipeResponseDto?> GetRecipeByIdAsync(int id);
+        Task<RecipeResponseDto> CreateRecipeAsync(CreateRecipeDto newRecipeDto);
         Task UpdateRecipeByIdAsync(int id, CreateRecipeDto updateRecipeDto);
         Task DeleteRecipeByIdAsync(int id);
-        Task<PagedResult<Recipe>> GetPagedRecipesAsync(RecipeQueryParameters query);
+        Task<PagedResult<RecipeResponseDto>> GetPagedRecipesAsync(RecipeQueryParameters query);
     }
 }
