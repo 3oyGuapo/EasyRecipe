@@ -4,14 +4,13 @@ using System.Text;
 using Xunit;
 using Microsoft.EntityFrameworkCore;
 using EasyRecipeAPI.DbContextData;
-using EasyRecipeAPI;
 using EasyRecipeAPI.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using EasyRecipeAPI.Services;
 using RecipeData.Entities;
 
-namespace EasyRecipeAPI.Tests
+namespace EasyRecipeAPI.Tests.Controllers
 {
     public class RecipesControllerTests
     {

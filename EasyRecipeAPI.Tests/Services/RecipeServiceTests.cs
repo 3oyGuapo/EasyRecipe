@@ -9,7 +9,7 @@ using EasyRecipeAPI.Repositories;
 using RecipeData.Dtos;
 using RecipeData.Entities;
 
-namespace EasyRecipeAPI.Tests
+namespace EasyRecipeAPI.Tests.Services
 {
     public class RecipeServiceTests
     {

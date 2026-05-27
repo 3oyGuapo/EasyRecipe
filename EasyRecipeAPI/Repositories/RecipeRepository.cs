@@ -34,7 +34,8 @@ namespace EasyRecipeAPI.Repositories
 
         public async Task AddRecipeAsync(Recipe newRecipe)
         {
-            await _context.Recipes.AddAsync(newRecipe);
+            _context.Recipes.Add(newRecipe);
+            await Task.CompletedTask;
         }
 
         public async Task DeleteRecipeAsync(Recipe recipeToDelete)
