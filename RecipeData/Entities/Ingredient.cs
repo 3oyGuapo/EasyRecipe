@@ -6,10 +6,10 @@ namespace RecipeData.Entities
 {
     public class Ingredient
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string UnitAmount { get; set; }
-        public int RecipeID { get; set; }
+        public int RecipeId { get; set; }
         public Recipe Recipe { get; set; }
     }
 }

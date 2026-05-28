@@ -40,14 +40,14 @@ namespace EasyRecipeAPI.Services
             Recipe newRecipe = new Recipe()
             {
                 RecipeName = newRecipeDto.Name,
-                IngredientsList = new List<Ingredient>(),
-                StepsList = new List<Step>(),
-                TagsList = new List<Tag>()
+                Ingredients = new List<Ingredient>(),
+                Steps = new List<Step>(),
+                Tags = new List<Tag>()
             };
 
             foreach (var ingredientDto in newRecipeDto.IngredientsList)
             {
-                newRecipe.IngredientsList.Add(new Ingredient()
+                newRecipe.Ingredients.Add(new Ingredient()
                     {
                     Name = ingredientDto.Name,
                     UnitAmount = ingredientDto.UnitAmount
@@ -56,7 +56,7 @@ namespace EasyRecipeAPI.Services
 
             foreach (var stepDto in newRecipeDto.StepsList)
             {
-                newRecipe.StepsList.Add(new Step()
+                newRecipe.Steps.Add(new Step()
                 {
                     StepContent = stepDto.StepContent,
                     StepOrder = stepDto.StepOrder
@@ -69,11 +69,11 @@ namespace EasyRecipeAPI.Services
 
                 if (existingTag != null)
                 {
-                    newRecipe.TagsList.Add(existingTag);
+                    newRecipe.Tags.Add(existingTag);
                 }
                 else
                 {
-                    newRecipe.TagsList.Add(new Tag() { Name = tagName });
+                    newRecipe.Tags.Add(new Tag() { Name = tagName });
                 }
             }
 
@@ -94,13 +94,13 @@ namespace EasyRecipeAPI.Services
 
             recipeToUpdate.RecipeName = updateRecipeDto.Name;
 
-            recipeToUpdate.IngredientsList.Clear();
-            recipeToUpdate.StepsList.Clear();
-            recipeToUpdate.TagsList.Clear();
+            recipeToUpdate.Ingredients.Clear();
+            recipeToUpdate.Steps.Clear();
+            recipeToUpdate.Tags.Clear();
 
             foreach (var ingredientDto in updateRecipeDto.IngredientsList)
             {
-                recipeToUpdate.IngredientsList.Add(new Ingredient()
+                recipeToUpdate.Ingredients.Add(new Ingredient()
                 {
                     Name = ingredientDto.Name,
                     UnitAmount = ingredientDto.UnitAmount
@@ -109,7 +109,7 @@ namespace EasyRecipeAPI.Services
 
             foreach (var stepDto in updateRecipeDto.StepsList)
             {
-                recipeToUpdate.StepsList.Add(new Step() 
+                recipeToUpdate.Steps.Add(new Step() 
                 {
                     StepContent = stepDto.StepContent,
                     StepOrder = stepDto.StepOrder
@@ -122,11 +122,11 @@ namespace EasyRecipeAPI.Services
 
                 if (existingTag != null)
                 {
-                    recipeToUpdate.TagsList.Add(existingTag);
+                    recipeToUpdate.Tags.Add(existingTag);
                 }
                 else
                 {
-                    recipeToUpdate.TagsList.Add(new Tag() { Name = tagDto });
+                    recipeToUpdate.Tags.Add(new Tag() { Name = tagDto });
                 }
             }
 
@@ -166,19 +166,19 @@ namespace EasyRecipeAPI.Services
         {
             return new RecipeResponseDto
             {
-                Id = recipe.ID,
+                Id = recipe.Id,
                 RecipeName = recipe.RecipeName,
-                Ingredients = recipe.IngredientsList.Select(ingredient => new IngredientResponseDto
+                Ingredients = recipe.Ingredients.Select(ingredient => new IngredientResponseDto
                 {
                     Name = ingredient.Name,
                     UnitAmount = ingredient.UnitAmount
                 }).ToList(),
-                Steps = recipe.StepsList.Select(step => new StepResponseDto
+                Steps = recipe.Steps.Select(step => new StepResponseDto
                 {
                     StepContent = step.StepContent,
                     StepOrder = step.StepOrder
                 }).ToList(),
-                Tags = recipe.TagsList.Select(tag => tag.Name).ToList(),
+                Tags = recipe.Tags.Select(tag => tag.Name).ToList(),
                 CreatedAt = recipe.CreatedAt
             };
         }

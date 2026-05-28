@@ -17,19 +17,19 @@ namespace EasyRecipeAPI.Repositories
         public async Task<IEnumerable<Recipe>> GetAllRecipesAsync()
         {
             return await _context.Recipes
-                .Include(recipe => recipe.IngredientsList)
-                .Include(recipe => recipe.StepsList)
-                .Include(recipe => recipe.TagsList)
+                .Include(recipe => recipe.Ingredients)
+                .Include(recipe => recipe.Steps)
+                .Include(recipe => recipe.Tags)
                 .ToListAsync();
         }
 
         public async Task<Recipe?> GetRecipeByIdAsync(int id)
         {
             return await _context.Recipes
-                .Include(recipe => recipe.IngredientsList)
-                .Include(recipe => recipe.StepsList)
-                .Include(recipe => recipe.TagsList)
-                .FirstOrDefaultAsync(recipe => recipe.ID == id);
+                .Include(recipe => recipe.Ingredients)
+                .Include(recipe => recipe.Steps)
+                .Include(recipe => recipe.Tags)
+                .FirstOrDefaultAsync(recipe => recipe.Id == id);
         }
 
         public async Task AddRecipeAsync(Recipe newRecipe)
@@ -67,9 +67,9 @@ namespace EasyRecipeAPI.Repositories
             int totalCount = await baseQuery.CountAsync();
 
             var items = await baseQuery
-                .Include(recipe => recipe.IngredientsList)
-                .Include(recipe => recipe.StepsList)
-                .Include(recipe => recipe.TagsList)
+                .Include(recipe => recipe.Ingredients)
+                .Include(recipe => recipe.Steps)
+                .Include(recipe => recipe.Tags)
                 .Skip((query.PageNumber - 1) * query.PageSize)
                 .Take(query.PageSize)
                 .ToListAsync();

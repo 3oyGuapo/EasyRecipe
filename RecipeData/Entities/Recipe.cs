@@ -9,11 +9,11 @@ namespace RecipeData.Entities
     public class Recipe : IAuditable, ISoftDeletable
     {
         [Key]
-        public int ID { get; set; }
+        public int Id { get; set; }
         public string RecipeName { get; set; }
-        public List<Ingredient> IngredientsList { get; set; }
-        public List<Step> StepsList { get; set; }
-        public List<Tag> TagsList { get; set; }
+        public List<Ingredient> Ingredients { get; set; }
+        public List<Step> Steps { get; set; }
+        public List<Tag> Tags { get; set; }
 
         // IAuditable implementation
         public DateTime CreatedAt { get; set; }

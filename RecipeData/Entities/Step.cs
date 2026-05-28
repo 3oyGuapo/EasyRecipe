@@ -6,10 +6,10 @@ namespace RecipeData.Entities
 {
     public class Step
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
         public string StepContent { get; set; }
         public int StepOrder { get; set; }
-        public int RecipeID { get; set; }
+        public int RecipeId { get; set; }
         public Recipe Recipe { get; set; }
     }
 }

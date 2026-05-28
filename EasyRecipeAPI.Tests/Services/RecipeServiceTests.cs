@@ -36,7 +36,7 @@ namespace EasyRecipeAPI.Tests.Services
                 TagsList = new List<string> { "Noodle" }
             };
 
-            var existingTag = new Tag { ID = 99, Name = "Noodle" };
+            var existingTag = new Tag { Id = 99, Name = "Noodle" };
 
             mockRepository.GetTagByNameAsync("Noodle").Returns(existingTag);
 
@@ -53,8 +53,8 @@ namespace EasyRecipeAPI.Tests.Services
 
             await mockRepository.Received(1).AddRecipeAsync(Arg.Is<Recipe>(recipe =>
             recipe.RecipeName == "Beef noodles" &&
-            recipe.TagsList.Count == 1 &&
-            recipe.TagsList[0].ID == 99
+            recipe.Tags.Count == 1 &&
+            recipe.Tags[0].Id == 99
             ));
 
             await mockRepository.Received(1).SaveChangesAsync();

@@ -28,18 +28,18 @@ namespace EasyRecipeAPI.Tests.Repositories
                 var sampleRecipe = new Recipe
                 {
                     RecipeName = "Beef noodle",
-                    IngredientsList = new List<Ingredient>
+                    Ingredients = new List<Ingredient>
                     {
                         new Ingredient { Name = "Beef", UnitAmount = "200g" },
                         new Ingredient { Name = "Noodles", UnitAmount = "400g" }
                     },
-                    StepsList = new List<Step>
+                    Steps = new List<Step>
                     {
                         new Step { StepContent = "Cook beef", StepOrder = 1 },
                         new Step { StepContent = "Cook noodles", StepOrder = 2 },
                         new Step { StepContent = "Put beef and noodles together with flavours", StepOrder = 3 }
                     },
-                    TagsList = new List<Tag>
+                    Tags = new List<Tag>
                     {
                         new Tag { Name = "Asian" },
                         new Tag { Name = "Main Dish" }
@@ -67,17 +67,17 @@ namespace EasyRecipeAPI.Tests.Repositories
             var recipe = resultRecipes[0];
             Assert.Equal("Beef noodle", recipe.RecipeName);
 
-            Assert.NotNull(recipe.IngredientsList);
-            Assert.Equal(2, recipe.IngredientsList.Count);
-            Assert.Contains(recipe.IngredientsList, i => i.Name == "Beef");
+            Assert.NotNull(recipe.Ingredients);
+            Assert.Equal(2, recipe.Ingredients.Count);
+            Assert.Contains(recipe.Ingredients, i => i.Name == "Beef");
 
-            Assert.NotNull(recipe.StepsList);
-            Assert.Equal(3, recipe.StepsList.Count);
-            Assert.Equal(1, recipe.StepsList[0].StepOrder);
+            Assert.NotNull(recipe.Steps);
+            Assert.Equal(3, recipe.Steps.Count);
+            Assert.Equal(1, recipe.Steps[0].StepOrder);
 
-            Assert.NotNull(recipe.TagsList);
-            Assert.Equal(2, recipe.TagsList.Count);
-            Assert.Contains(recipe.TagsList, t => t.Name == "Main Dish");
+            Assert.NotNull(recipe.Tags);
+            Assert.Equal(2, recipe.Tags.Count);
+            Assert.Contains(recipe.Tags, t => t.Name == "Main Dish");
         }
 
         [Fact]
