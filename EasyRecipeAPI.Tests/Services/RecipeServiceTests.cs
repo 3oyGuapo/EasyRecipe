@@ -42,21 +42,20 @@ namespace EasyRecipeAPI.Tests.Services
 
 
             // 2. Act
-            Recipe resultRecipe = await service.CreateRecipeAsync(inputDto);
+            RecipeResponseDto resultRecipe = await service.CreateRecipeAsync(inputDto);
 
 
             // 3. Assert
             Assert.NotNull(resultRecipe);
             Assert.Equal("Beef noodles", resultRecipe.RecipeName);
 
-            Assert.Single(resultRecipe.TagsList);
+            Assert.Single(resultRecipe.Tags);
 
-            var linkedTag = resultRecipe.TagsList[0];
-            Assert.Equal("Noodle", linkedTag.Name);
-
-            Assert.Equal(99, linkedTag.ID);
-
-            await mockRepository.Received(1).AddRecipeAsync(resultRecipe);
+            await mockRepository.Received(1).AddRecipeAsync(Arg.Is<Recipe>(recipe =>
+            recipe.RecipeName == "Beef noodles" &&
+            recipe.TagsList.Count == 1 &&
+            recipe.TagsList[0].ID == 99
+            ));
 
             await mockRepository.Received(1).SaveChangesAsync();
         }

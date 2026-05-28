@@ -21,16 +21,9 @@ namespace EasyRecipeAPI.Controllers
             _recipeService = service;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipes()
-        {
-            var recipes = await _recipeService.GetAllRecipesAsync();
-
-            return Ok(recipes);
-        }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Recipe>> GetRecipe(int id)
+        public async Task<ActionResult<RecipeResponseDto>> GetRecipe(int id)
         {
             var recipe = await _recipeService.GetRecipeByIdAsync(id);
 
@@ -43,18 +36,18 @@ namespace EasyRecipeAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<PagedResult<Recipe>>> GetRecipes([FromQuery] RecipeQueryParameters query)
+        public async Task<ActionResult<PagedResult<RecipeResponseDto>>> GetRecipes([FromQuery] RecipeQueryParameters query)
         {
             var pagedResult = await _recipeService.GetPagedRecipesAsync(query);
             return Ok(pagedResult);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Recipe>> AddRecipe(CreateRecipeDto newRecipeDto)
+        public async Task<ActionResult<RecipeResponseDto>> AddRecipe(CreateRecipeDto newRecipeDto)
         {
             var createdRecipe = await _recipeService.CreateRecipeAsync(newRecipeDto);
 
-            return CreatedAtAction(nameof(GetRecipe), new { id = createdRecipe.ID }, createdRecipe);
+            return CreatedAtAction(nameof(GetRecipe), new { id = createdRecipe.Id }, createdRecipe);
         }
 
         /// <summary>
