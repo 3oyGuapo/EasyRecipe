@@ -25,43 +25,39 @@ namespace EasyRecipeAPI.Middlewares
             {
                 _logger.LogWarning(ex, $"Resource not found: {ex.Message}");
 
-                httpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
-                httpContext.Response.ContentType = "application/json";
-
-                await httpContext.Response.WriteAsJsonAsync(new
-                {
-                    statusCode = 404,
-                    message = "Resource not found"
-                });
+                await HandleExceptionAsync(httpContext, HttpStatusCode.NotFound, "Resource not found");
             }
 
             catch (ArgumentException ex)
             {
                 _logger.LogWarning(ex, $"Invalid argument: {ex.Message}");
 
-                httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                httpContext.Response.ContentType = "application/json";
-
-                await httpContext.Response.WriteAsJsonAsync(new
-                {
-                    statusCode = 400,
-                    message = "Bad request"
-                });
+                await HandleExceptionAsync(httpContext, HttpStatusCode.BadRequest, ex.Message);
             }
 
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"An unhandled exception occured: {ex.Message}");
 
-                httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                httpContext.Response.ContentType = "application/json";
-
-                await httpContext.Response.WriteAsJsonAsync(new
-                {
-                    statusCode = 500,
-                    message = "Internal server error"
-                });
+                await HandleExceptionAsync(httpContext, HttpStatusCode.InternalServerError, "Internal server error");
             }
+        }
+
+
+        private static async Task HandleExceptionAsync(HttpContext httpContext, HttpStatusCode httpStatusCode, string message)
+        {
+            httpContext.Response.StatusCode = (int)httpStatusCode;
+
+            httpContext.Response.ContentType = "application/json";
+
+            var response = new
+            {
+                statusCode = httpContext.Response.StatusCode,
+                message = message,
+                timestamp = DateTime.UtcNow
+            };
+
+            await httpContext.Response.WriteAsJsonAsync(response);
         }
 
     }
