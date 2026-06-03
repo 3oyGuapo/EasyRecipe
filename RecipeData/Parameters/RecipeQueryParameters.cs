@@ -10,7 +10,7 @@ namespace RecipeData.Parameters
 
         private int _pageSize = 10;
 
-        public int PageNumber { get; set; }
+        public int PageNumber { get; set; } = 0;
         public int PageSize
         {
             get => _pageSize;
@@ -18,6 +18,6 @@ namespace RecipeData.Parameters
         }
         public string? SearchQuery { get; set; }
         public string? SortBy { get; set; }
-        public string SortOrder { get; set; }
+        public string? SortOrder { get; set; }
     }
 }

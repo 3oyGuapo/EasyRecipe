@@ -9,14 +9,14 @@ namespace RecipeData.Dtos
     {
         [Required(ErrorMessage = "Recipe name cannot be null")]
         [MaxLength(50, ErrorMessage = "Name is too long")]
-        public string Name { get; set; } = string.Empty;
+        public string RecipeName { get; set; } = string.Empty;
 
         [MinLength(1, ErrorMessage = "At least one ingredient is required")]
-        public List<CreateIngredientDto> IngredientsList { get; set; } = [];
+        public List<CreateIngredientDto> Ingredients { get; set; } = [];
 
         [MinLength(1, ErrorMessage = "At least one step is required")]
-        public List<CreateStepDto> StepsList { get; set; } = [];
+        public List<CreateStepDto> Steps { get; set; } = [];
 
-        public List<string> TagsList { get; set; } = [];
+        public List<string> Tags { get; set; } = [];
     }
 }

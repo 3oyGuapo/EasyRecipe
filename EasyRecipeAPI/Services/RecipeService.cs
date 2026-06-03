@@ -39,13 +39,13 @@ namespace EasyRecipeAPI.Services
         {
             Recipe newRecipe = new Recipe()
             {
-                RecipeName = newRecipeDto.Name,
+                RecipeName = newRecipeDto.RecipeName,
                 Ingredients = new List<Ingredient>(),
                 Steps = new List<Step>(),
                 Tags = new List<Tag>()
             };
 
-            foreach (var ingredientDto in newRecipeDto.IngredientsList)
+            foreach (var ingredientDto in newRecipeDto.Ingredients)
             {
                 newRecipe.Ingredients.Add(new Ingredient()
                     {
@@ -54,7 +54,7 @@ namespace EasyRecipeAPI.Services
                 });
             }
 
-            foreach (var stepDto in newRecipeDto.StepsList)
+            foreach (var stepDto in newRecipeDto.Steps)
             {
                 newRecipe.Steps.Add(new Step()
                 {
@@ -63,7 +63,7 @@ namespace EasyRecipeAPI.Services
                 });
             }
 
-            foreach (string tagName in newRecipeDto.TagsList)
+            foreach (string tagName in newRecipeDto.Tags)
             {
                 Tag? existingTag = await _recipeRepository.GetTagByNameAsync(tagName);
 
@@ -92,13 +92,13 @@ namespace EasyRecipeAPI.Services
                 throw new KeyNotFoundException($"Recipe with ID {id} not found.");
             }
 
-            recipeToUpdate.RecipeName = updateRecipeDto.Name;
+            recipeToUpdate.RecipeName = updateRecipeDto.RecipeName;
 
             recipeToUpdate.Ingredients.Clear();
             recipeToUpdate.Steps.Clear();
             recipeToUpdate.Tags.Clear();
 
-            foreach (var ingredientDto in updateRecipeDto.IngredientsList)
+            foreach (var ingredientDto in updateRecipeDto.Ingredients)
             {
                 recipeToUpdate.Ingredients.Add(new Ingredient()
                 {
@@ -107,7 +107,7 @@ namespace EasyRecipeAPI.Services
                 });
             }
 
-            foreach (var stepDto in updateRecipeDto.StepsList)
+            foreach (var stepDto in updateRecipeDto.Steps)
             {
                 recipeToUpdate.Steps.Add(new Step() 
                 {
@@ -116,7 +116,7 @@ namespace EasyRecipeAPI.Services
                 });
             }
 
-            foreach (string tagDto in updateRecipeDto.TagsList)
+            foreach (string tagDto in updateRecipeDto.Tags)
             {
                 Tag? existingTag = await _recipeRepository.GetTagByNameAsync(tagDto);
 

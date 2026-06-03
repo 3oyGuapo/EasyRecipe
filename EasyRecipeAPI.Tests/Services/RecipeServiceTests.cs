@@ -24,16 +24,16 @@ namespace EasyRecipeAPI.Tests.Services
 
             var inputDto = new CreateRecipeDto
             {
-                Name = "Beef noodles",
-                IngredientsList = new List<CreateIngredientDto>
+                RecipeName = "Beef noodles",
+                Ingredients = new List<CreateIngredientDto>
                 {
                     new CreateIngredientDto { Name = "Beef", UnitAmount = "100g" }
                 },
-                StepsList = new List<CreateStepDto>
+                Steps = new List<CreateStepDto>
                 {
                     new CreateStepDto { StepContent = "Cook the beef", StepOrder = 1 }
                 },
-                TagsList = new List<string> { "Noodle" }
+                Tags = new List<string> { "Noodle" }
             };
 
             var existingTag = new Tag { Id = 99, Name = "Noodle" };
