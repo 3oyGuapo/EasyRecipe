@@ -10,7 +10,7 @@ namespace EasyRecipeAPI.Services
         Task<IEnumerable<RecipeResponseDto>> GetAllRecipesAsync();
         Task<RecipeResponseDto?> GetRecipeByIdAsync(int id);
         Task<RecipeResponseDto> CreateRecipeAsync(CreateRecipeDto newRecipeDto);
-        Task UpdateRecipeByIdAsync(int id, CreateRecipeDto updateRecipeDto);
+        Task UpdateRecipeByIdAsync(int id, UpdateRecipeDto updateRecipeDto);
         Task DeleteRecipeByIdAsync(int id);
         Task<PagedResult<RecipeResponseDto>> GetPagedRecipesAsync(RecipeQueryParameters query);
     }

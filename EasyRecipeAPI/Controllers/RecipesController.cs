@@ -63,9 +63,9 @@ namespace EasyRecipeAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateRecipe(int id, CreateRecipeDto newRecipeDto)
+        public async Task<IActionResult> UpdateRecipe(int id, UpdateRecipeDto updateRecipeDto)
         {
-            await _recipeService.UpdateRecipeByIdAsync(id, newRecipeDto);
+            await _recipeService.UpdateRecipeByIdAsync(id, updateRecipeDto);
             return NoContent();
         }
     }

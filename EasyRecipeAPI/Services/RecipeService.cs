@@ -1,5 +1,4 @@
 ﻿using EasyRecipeAPI.Repositories;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Query.ExpressionTranslators.Internal;
 using RecipeData.Dtos;
 using RecipeData.Entities;
 using RecipeData.Parameters;
@@ -83,7 +82,7 @@ namespace EasyRecipeAPI.Services
             return MapToResponseDto(newRecipe);
         }
 
-        public async Task UpdateRecipeByIdAsync(int id, CreateRecipeDto updateRecipeDto)
+        public async Task UpdateRecipeByIdAsync(int id, UpdateRecipeDto updateRecipeDto)
         {
             var recipeToUpdate = await _recipeRepository.GetRecipeByIdAsync(id);
 
@@ -160,7 +159,7 @@ namespace EasyRecipeAPI.Services
             
         }
 
-
+        
 
         private RecipeResponseDto MapToResponseDto(Recipe recipe)
         {
