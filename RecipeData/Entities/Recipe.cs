@@ -10,10 +10,10 @@ namespace RecipeData.Entities
     {
         [Key]
         public int Id { get; set; }
-        public string RecipeName { get; set; }
-        public List<Ingredient> Ingredients { get; set; }
-        public List<Step> Steps { get; set; }
-        public List<Tag> Tags { get; set; }
+        public string RecipeName { get; set; } = string.Empty;
+        public List<Ingredient> Ingredients { get; set; } = [];
+        public List<Step> Steps { get; set; } = [];
+        public List<Tag> Tags { get; set; } = [];
 
         // IAuditable implementation
         public DateTime CreatedAt { get; set; }

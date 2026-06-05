@@ -8,7 +8,7 @@ namespace RecipeData.Entities
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
-        public string UnitAmount { get; set; }
+        public string UnitAmount { get; set; } = string.Empty;
         public int RecipeId { get; set; }
         public Recipe Recipe { get; set; }
     }
