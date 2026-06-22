@@ -46,34 +46,17 @@ namespace EasyRecipeAPI.Services
 
             foreach (var ingredientDto in newRecipeDto.Ingredients)
             {
-                newRecipe.Ingredients.Add(new Ingredient()
-                    {
-                    Name = ingredientDto.Name,
-                    UnitAmount = ingredientDto.UnitAmount
-                });
+                newRecipe.Ingredients.Add(MapToIngredient(ingredientDto));
             }
 
             foreach (var stepDto in newRecipeDto.Steps)
             {
-                newRecipe.Steps.Add(new Step()
-                {
-                    StepContent = stepDto.StepContent,
-                    StepOrder = stepDto.StepOrder
-                });
+                newRecipe.Steps.Add(MapToStep(stepDto));
             }
 
             foreach (string tagName in newRecipeDto.Tags)
             {
-                Tag? existingTag = await _recipeRepository.GetTagByNameAsync(tagName);
-
-                if (existingTag != null)
-                {
-                    newRecipe.Tags.Add(existingTag);
-                }
-                else
-                {
-                    newRecipe.Tags.Add(new Tag() { Name = tagName });
-                }
+                newRecipe.Tags.Add(await ResolveTagAsync(tagName));
             }
 
             await _recipeRepository.AddRecipeAsync(newRecipe);
@@ -99,34 +82,17 @@ namespace EasyRecipeAPI.Services
 
             foreach (var ingredientDto in updateRecipeDto.Ingredients)
             {
-                recipeToUpdate.Ingredients.Add(new Ingredient()
-                {
-                    Name = ingredientDto.Name,
-                    UnitAmount = ingredientDto.UnitAmount
-                });
+                recipeToUpdate.Ingredients.Add(MapToIngredient(ingredientDto));
             }
 
             foreach (var stepDto in updateRecipeDto.Steps)
             {
-                recipeToUpdate.Steps.Add(new Step() 
-                {
-                    StepContent = stepDto.StepContent,
-                    StepOrder = stepDto.StepOrder
-                });
+                recipeToUpdate.Steps.Add(MapToStep(stepDto));
             }
 
-            foreach (string tagDto in updateRecipeDto.Tags)
+            foreach (string tagName in updateRecipeDto.Tags)
             {
-                Tag? existingTag = await _recipeRepository.GetTagByNameAsync(tagDto);
-
-                if (existingTag != null)
-                {
-                    recipeToUpdate.Tags.Add(existingTag);
-                }
-                else
-                {
-                    recipeToUpdate.Tags.Add(new Tag() { Name = tagDto });
-                }
+                recipeToUpdate.Tags.Add(await ResolveTagAsync(tagName));
             }
 
             await _recipeRepository.SaveChangesAsync();
@@ -160,7 +126,18 @@ namespace EasyRecipeAPI.Services
         }
 
         
+        private static Ingredient MapToIngredient(CreateIngredientDto ingredientDto) =>
+            new Ingredient() { Name = ingredientDto.Name, UnitAmount = ingredientDto.UnitAmount };
 
+        private static Step MapToStep(CreateStepDto stepDto) =>
+            new Step() { StepContent = stepDto.StepContent, StepOrder = stepDto.StepOrder };
+
+        private async Task<Tag> ResolveTagAsync(string tagName)
+        {
+            Tag? existingTag = await _recipeRepository.GetTagByNameAsync(tagName);
+            return existingTag ?? new Tag() { Name = tagName };
+        }
+        
         private RecipeResponseDto MapToResponseDto(Recipe recipe)
         {
             return new RecipeResponseDto
