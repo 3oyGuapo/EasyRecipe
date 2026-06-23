@@ -4,9 +4,9 @@ using System.Text;
 
 namespace RecipeData.Dtos
 {
-    public class StepResponseDto
+    public record class StepResponseDto
     {
-        public string StepContent { get; set; } = string.Empty;
-        public int StepOrder { get; set; }
+        public string StepContent { get; init; } = string.Empty;
+        public int StepOrder { get; init; }
     }
 }

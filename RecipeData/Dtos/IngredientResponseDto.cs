@@ -4,9 +4,9 @@ using System.Text;
 
 namespace RecipeData.Dtos
 {
-    public class IngredientResponseDto
+    public record class IngredientResponseDto
     {
-        public string Name { get; set; } = string.Empty;
-        public string UnitAmount { get; set; } = string.Empty;
+        public string Name { get; init; } = string.Empty;
+        public string UnitAmount { get; init; } = string.Empty;
     }
 }
