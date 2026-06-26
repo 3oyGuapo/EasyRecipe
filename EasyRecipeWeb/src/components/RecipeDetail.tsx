@@ -32,13 +32,13 @@ function RecipeDetail() {
         <h2>Recipe Id: {id}</h2>
 
         <ul>
-          {recipe.ingredientsList.map((ingredient) => (
+          {recipe.ingredients.map((ingredient) => (
             <li>{ingredient.name}</li>
           ))}
         </ul>
 
         <ul>
-          {recipe.stepsList.map((step) => (
+          {recipe.steps.map((step) => (
             <li>
               {step.stepOrder} {step.stepContent}
             </li>

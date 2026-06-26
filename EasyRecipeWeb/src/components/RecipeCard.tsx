@@ -14,14 +14,14 @@ function RecipeCard({ recipe, onDelete }: RecipeCardProps) {
         <h3>{recipe.recipeName}</h3>
       </Link>
       <p>
-        Ingredients amount: {recipe.ingredientsList?.length || 0} {"  "}
-        Steps: {recipe.stepsList?.length || 0}
+        Ingredients amount: {recipe.ingredients?.length || 0} {"  "}
+        Steps: {recipe.steps?.length || 0}
       </p>
 
       <div>
-        {recipe.tagsList?.map((tag) => (
-          <span key={tag.id} style={{ marginRight: "5px", color: "blue" }}>
-            #{tag.name}
+        {recipe.tags?.map((tag) => (
+          <span key={tag} style={{ marginRight: "5px", color: "blue" }}>
+            #{tag}
           </span>
         ))}
       </div>

@@ -24,10 +24,10 @@ function RecipeEdit() {
         const detail = await response.json();
 
         setRecipeName(detail.recipeName);
-        setIngredients(detail.ingredientsList);
-        setSteps(detail.stepsList);
+        setIngredients(detail.ingredients);
+        setSteps(detail.steps);
 
-        const tagString = detail.tagsList.map((t: any) => t.name).join(", ");
+        const tagString = detail.tags.join(", ");
         setTagInput(tagString);
       } catch (error) {
         console.error("Error occur", error);
@@ -47,11 +47,10 @@ function RecipeEdit() {
       .filter((tag) => tag.length > 0);
 
     const payload = {
-      id: Number(id),
-      name: recipeName,
-      ingredientsList: ingredients,
-      stepsList: steps,
-      tagsList: tagsArray,
+      recipeName: recipeName,
+      ingredients: ingredients,
+      steps: steps,
+      tags: tagsArray,
     };
 
     try {

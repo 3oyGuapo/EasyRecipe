@@ -1,5 +1,4 @@
 import { useState } from "react";
-import type { Recipe } from "../types.ts";
 import { useNavigate, Link } from "react-router-dom";
 
 function RecipeForm() {
@@ -24,10 +23,10 @@ function RecipeForm() {
       .filter((tag) => tag.length > 0);
 
     const payload = {
-      name: recipeName,
-      ingredientsList: ingredients,
-      stepsList: steps,
-      tagsList: tagsArray,
+      recipeName: recipeName,
+      ingredients: ingredients,
+      steps: steps,
+      tags: tagsArray,
     };
 
     try {

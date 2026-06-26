@@ -12,7 +12,7 @@ function RecipeList() {
         //Fetch response from the address
         const response = await fetch("https://localhost:7287/api/Recipes");
         const data = await response.json();
-        setRecipeList(data);
+        setRecipeList(data.items);
       } catch (error) {
         console.error("Error occur", error);
       }
