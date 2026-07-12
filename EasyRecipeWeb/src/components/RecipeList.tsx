@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import type { Recipe } from "../types";
 import RecipeCard from "./RecipeCard";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 function RecipeList() {
   const [recipeList, setRecipeList] = useState<Recipe[]>([]);
@@ -32,11 +33,12 @@ function RecipeList() {
         setRecipeList(
           (originalList) => originalList.filter((recipe) => recipe.id !== id) // Keep recipes that has different id than the target recipe using filter
         );
+        toast.success("Recipe deleted successfully");
       } else {
-        alert("Delete fail.");
+        toast.error("Failed to delete recipe");
       }
     } catch (error) {
-      console.error("Deletion error", error);
+      toast.error("An unexpected error occur, failed to delete recipe.");
     }
   };
 

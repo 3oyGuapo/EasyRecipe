@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { toast } from "sonner";
 
 function RecipeForm() {
   const [recipeName, setRecipeName] = useState("");
@@ -38,13 +39,15 @@ function RecipeForm() {
         body: JSON.stringify(payload),
       });
 
-      const createdRecipe = await response.json();
-
-      setRecipeName("");
-
-      navigate("/");
+      if (response.ok) {
+        toast.success("Recipe created successfully");
+        setRecipeName("");
+        navigate("/");
+      } else {
+        toast.error("Failed to create recipe");
+      }
     } catch (error) {
-      console.error("Fail to create new recipe", error);
+      toast.error("An unexpected error occur, failed to create recipe.");
     }
   };
 

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import type { Recipe } from "../types.ts";
 import { useNavigate, Link, useParams } from "react-router-dom";
+import { toast } from "sonner";
 
 function RecipeEdit() {
   const [recipeName, setRecipeName] = useState("");
@@ -63,12 +64,13 @@ function RecipeEdit() {
       });
 
       if (response.ok) {
+        toast.success("Recipe updated successfully");
         navigate("/");
       } else {
-        console.error("Update fail");
+        toast.error("Failed to update recipe");
       }
     } catch (error) {
-      console.error("Fail to create new recipe", error);
+      toast.error("An unexpected error occur, failed to update recipe.");
     }
   };
 
