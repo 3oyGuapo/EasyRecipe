@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import type { Recipe } from "../types";
+import { toast } from "sonner";
 
 function RecipeDetail() {
   const { id } = useParams();
@@ -16,7 +17,7 @@ function RecipeDetail() {
 
         setRecipe(detail);
       } catch (error) {
-        console.error("Error fetching details", error);
+        toast.error("Failed to fetch details");
       }
     };
     fetchDetail();
@@ -33,15 +34,23 @@ function RecipeDetail() {
 
         <ul>
           {recipe.ingredients.map((ingredient) => (
-            <li>{ingredient.name}</li>
+            <li key={ingredient.name}>{ingredient.name}</li>
           ))}
         </ul>
 
         <ul>
           {recipe.steps.map((step) => (
-            <li>
+            <li key={step.stepOrder}>
               {step.stepOrder} {step.stepContent}
             </li>
+          ))}
+        </ul>
+
+        <ul>
+          {recipe.tags.map((tag) => (
+            <span key={tag} style={{ marginRight: "5px", color: "blue" }}>
+              #{tag}
+            </span>
           ))}
         </ul>
       </div>
