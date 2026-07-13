@@ -10,9 +10,7 @@ function RecipeDetail() {
   useEffect(() => {
     const fetchDetail = async () => {
       try {
-        const response = await fetch(
-          `https://localhost:7287/api/Recipes/${id}`
-        );
+        const response = await fetch(`/api/Recipes/${id}`);
         const detail = await response.json();
 
         setRecipe(detail);

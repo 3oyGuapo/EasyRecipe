@@ -4,10 +4,12 @@ import RecipeForm from "./components/RecipeForm";
 import RecipeDetail from "./components/RecipeDetail";
 import RecipeEdit from "./components/RecipeEdit";
 import { Routes, Route } from "react-router-dom";
+import { Toaster } from "sonner";
 
 function App() {
   return (
     <>
+      <Toaster />
       <div>
         <h1>Recipe List</h1>
       </div>

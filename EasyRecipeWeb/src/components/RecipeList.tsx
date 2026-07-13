@@ -11,7 +11,7 @@ function RecipeList() {
     const fetchData = async () => {
       try {
         //Fetch response from the address
-        const response = await fetch("https://localhost:7287/api/Recipes");
+        const response = await fetch("/api/Recipes");
         const data = await response.json();
         setRecipeList(data.items);
       } catch (error) {
@@ -25,7 +25,7 @@ function RecipeList() {
   // Method that has the logic for deleting recipe
   const handleDelete = async (id: number) => {
     try {
-      const response = await fetch(`https://localhost:7287/api/Recipes/${id}`, {
+      const response = await fetch(`/api/Recipes/${id}`, {
         method: "DELETE",
       });
 
