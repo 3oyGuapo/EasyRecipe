@@ -1,85 +1,29 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useRecipeForm } from "../hooks/useRecipeForm";
 import { toast } from "sonner";
 
 function RecipeForm() {
-  const [recipeName, setRecipeName] = useState("");
-  const [ingredients, setIngredients] = useState<
-    { name: string; unitAmount: string }[]
-  >([]);
-  const [steps, setSteps] = useState<
-    { stepContent: string; stepOrder: number }[]
-  >([]);
-  const [tagInput, setTagInput] = useState("");
-  const navigate = useNavigate();
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRecipeName(e.target.value);
-  };
+  const form = useRecipeForm();
 
   const handleCreate = async () => {
-    const tagsArray = tagInput
-      .split(",")
-      .map((tag) => tag.trim())
-      .filter((tag) => tag.length > 0);
-
-    const payload = {
-      recipeName: recipeName,
-      ingredients: ingredients,
-      steps: steps,
-      tags: tagsArray,
-    };
-
     try {
       const response = await fetch("/api/Recipes", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(form.getPayload()),
       });
 
       if (response.ok) {
         toast.success("Recipe created successfully");
-        setRecipeName("");
-        navigate("/");
+        form.navigate("/");
       } else {
         toast.error("Failed to create recipe");
       }
     } catch (error) {
       toast.error("An unexpected error occur, failed to create recipe.");
     }
-  };
-
-  const addIngredient = () => {
-    setIngredients([...ingredients, { name: "", unitAmount: "" }]);
-  };
-
-  const addStep = () => {
-    setSteps([...steps, { stepContent: "", stepOrder: steps.length + 1 }]);
-  };
-
-  const handleIngredientChange = (
-    index: number,
-    field: "name" | "amount",
-    value: string
-  ) => {
-    const newIngredients = [...ingredients];
-
-    if (field === "name") {
-      newIngredients[index].name = value;
-    } else {
-      newIngredients[index].unitAmount = value;
-    }
-
-    setIngredients(newIngredients);
-  };
-
-  const handleStepChange = (index: number, value: string) => {
-    const newSteps = [...steps];
-
-    newSteps[index].stepContent = value;
-    setSteps(newSteps);
   };
 
   return (
@@ -95,15 +39,15 @@ function RecipeForm() {
           required
           type="text"
           placeholder="Enter new recipe name:"
-          value={recipeName}
-          onChange={onChange}
+          value={form.recipeName}
+          onChange={form.onChange}
         />
         <button onClick={handleCreate}>Create recipe</button>
 
         <div className="ingredients-List">
           <h3>Ingredients</h3>
 
-          {ingredients.map((ingredient, index) => (
+          {form.ingredients.map((ingredient, index) => (
             <div
               key={index}
               style={{ display: "flex", gap: "10px", marginBottom: "10px" }}
@@ -113,7 +57,7 @@ function RecipeForm() {
                 placeholder="Ingredient Name"
                 value={ingredient.name}
                 onChange={(e) =>
-                  handleIngredientChange(index, "name", e.target.value)
+                  form.handleIngredientChange(index, "name", e.target.value)
                 }
               />
 
@@ -122,19 +66,19 @@ function RecipeForm() {
                 placeholder="Amount"
                 value={ingredient.unitAmount}
                 onChange={(e) =>
-                  handleIngredientChange(index, "amount", e.target.value)
+                  form.handleIngredientChange(index, "amount", e.target.value)
                 }
               />
             </div>
           ))}
         </div>
 
-        <button onClick={addIngredient}>Add ingredient</button>
+        <button onClick={form.addIngredient}>Add ingredient</button>
 
         <div className="steps-List">
           <h3>Steps</h3>
 
-          {steps.map((step, index) => (
+          {form.steps.map((step, index) => (
             <div
               key={index}
               style={{ display: "flex", gap: "10px", marginBottom: "10px" }}
@@ -146,22 +90,22 @@ function RecipeForm() {
                 required
                 placeholder="Step details:"
                 value={step.stepContent}
-                onChange={(e) => handleStepChange(index, e.target.value)}
+                onChange={(e) => form.handleStepChange(index, e.target.value)}
                 style={{ flex: 1 }}
               />
             </div>
           ))}
         </div>
 
-        <button onClick={addStep}>Add steps</button>
+        <button onClick={form.addStep}>Add steps</button>
 
         <div style={{ marginTop: "20px" }}>
           <h3>Tags (use comma to separate)</h3>
 
           <input
             placeholder="e.g. breakfast, lunch, dissert"
-            value={tagInput}
-            onChange={(e) => setTagInput(e.target.value)}
+            value={form.tagInput}
+            onChange={(e) => form.setTagInput(e.target.value)}
             style={{ width: "100%" }}
           />
         </div>
