@@ -17,3 +17,26 @@ test("Initial value should be empty string and array", () => {
   expect(result.current.steps).toEqual([]);
   expect(result.current.tagInput).toBe("");
 });
+
+test("onChange should update recipeName", () => {
+  const { result } = renderRecipeForm();
+
+  act(() => {
+    result.current.onChange({
+      target: { value: "Pasta" },
+    } as React.ChangeEvent<HTMLInputElement>);
+  });
+
+  expect(result.current.recipeName).toBe("Pasta");
+});
+
+test("addIngredient should add an empty ingredient", () => {
+  const { result } = renderRecipeForm();
+
+  act(() => {
+    result.current.addIngredient();
+  });
+
+  expect(result.current.ingredients).toHaveLength(1);
+  expect(result.current.ingredients[0]).toEqual({ name: "", unitAmount: "" });
+});
