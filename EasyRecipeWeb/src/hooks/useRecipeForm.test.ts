@@ -73,3 +73,45 @@ test("addStep should calculate stepOrder based on the order", () => {
   expect(result.current.steps[0].stepOrder).toBe(1);
   expect(result.current.steps[2].stepOrder).toBe(3);
 });
+
+test("handleIngredientChange should change specified ingredient field", () => {
+  const { result } = renderRecipeForm();
+
+  act(() => {
+    result.current.addIngredient();
+  });
+
+  act(() => {
+    result.current.handleIngredientChange(0, "name", "flour");
+  });
+
+  expect(result.current.ingredients[0].name).toBe("flour");
+  expect(result.current.ingredients[0].unitAmount).toBe("");
+});
+
+test("getTagsArray should split comma and convert to array", () => {
+  const { result } = renderRecipeForm();
+
+  act(() => {
+    result.current.setTagInput("lunch, dinner, ");
+  });
+
+  expect(result.current.getTagsArray()).toEqual(["lunch", "dinner"]);
+});
+
+test("getPayload should return correct structure", () => {
+  const { result } = renderRecipeForm();
+
+  act(() => {
+    result.current.setTagInput("dinner");
+    result.current.addIngredient();
+    result.current.addStep();
+  });
+
+  const payload = result.current.getPayload();
+
+  expect(payload).toHaveProperty("recipeName");
+  expect(payload).toHaveProperty("ingredients");
+  expect(payload).toHaveProperty("steps");
+  expect(payload.tags).toEqual(["dinner"]);
+});

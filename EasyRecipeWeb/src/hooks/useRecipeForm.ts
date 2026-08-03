@@ -92,6 +92,7 @@ export function useRecipeForm(id?: string) {
     handleStepChange,
 
     getPayload,
+    getTagsArray,
     navigate,
   };
 }
