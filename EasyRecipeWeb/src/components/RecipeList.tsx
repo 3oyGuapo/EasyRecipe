@@ -8,13 +8,14 @@ function RecipeList() {
   const [recipeList, setRecipeList] = useState<Recipe[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         //Fetch response from the address
         const response = await fetch(
-          `/api/Recipes?pageNumber=${currentPage}&pageSize=10`
+          `/api/Recipes?pageNumber=${currentPage}&pageSize=10&searchQuery=${searchQuery}`
         );
         const data = await response.json();
         setRecipeList(data.items);
@@ -25,7 +26,7 @@ function RecipeList() {
     };
 
     fetchData();
-  }, [currentPage]);
+  }, [currentPage, searchQuery]);
 
   // Method that has the logic for deleting recipe
   const handleDelete = async (id: number) => {
@@ -54,6 +55,19 @@ function RecipeList() {
       <Link to="/add">
         <button>Add recipe</button>
       </Link>
+
+      <div>
+        <input
+          type="text"
+          placeholder="Search recipes..."
+          value={searchQuery}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+            setCurrentPage(1);
+          }}
+        />
+      </div>
+
       <div>
         {recipeList.map((recipe) => (
           <RecipeCard
