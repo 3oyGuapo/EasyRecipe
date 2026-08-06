@@ -9,9 +9,11 @@ function RecipeList() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
         //Fetch response from the address
         const response = await fetch(
@@ -22,6 +24,8 @@ function RecipeList() {
         setTotalPages(data.totalPages);
       } catch (error) {
         console.error("Error occur", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -69,13 +73,19 @@ function RecipeList() {
       </div>
 
       <div>
-        {recipeList.map((recipe) => (
-          <RecipeCard
-            key={recipe.id}
-            recipe={recipe}
-            onDelete={() => handleDelete(recipe.id)} // Pass in the logic method to child component
-          />
-        ))}
+        {loading ? (
+          <p>Loading...</p>
+        ) : recipeList.length === 0 ? (
+          <p>No recipes yet. Click "Add recipe" to create your first one</p>
+        ) : (
+          recipeList.map((recipe) => (
+            <RecipeCard
+              key={recipe.id}
+              recipe={recipe}
+              onDelete={() => handleDelete(recipe.id)}
+            />
+          ))
+        )}
       </div>
 
       <div
