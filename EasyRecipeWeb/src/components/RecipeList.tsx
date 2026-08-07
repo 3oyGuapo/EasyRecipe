@@ -34,6 +34,14 @@ function RecipeList() {
 
   // Method that has the logic for deleting recipe
   const handleDelete = async (id: number) => {
+    const recipeToDelete = recipeList.find((recipe) => recipe.id === id);
+    const confirmed = window.confirm(
+      `Are you sure you want to delete recipe: ${recipeToDelete?.recipeName}? You will not be able to restore it once deleted.`
+    );
+    if (!confirmed) {
+      return;
+    }
+
     try {
       const response = await fetch(`/api/Recipes/${id}`, {
         method: "DELETE",
